@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:09:41 by yuewang           #+#    #+#             */
-/*   Updated: 2024/01/31 21:41:06 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/02/04 17:28:44 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,37 +23,20 @@
         }
     }
 }*/
-int main(int argc, char *argv[], char *envp[]) 
+
+/*
+    Minishell must not have any argument : if argc <> 1
+    return and display error
+*/
+int main(int argc,char **argv,char **envp) 
 {
-    (void) argc;
-    (void) argv;
-    char *input;
-    char **tokens;
     t_shell *shell;
 
-    //using_history();
-    while (1) 
-    {
-        input = readline("Minishell $> ");
-        if (!input) 
-            break;
-        if (strcmp(input, "exit") == 0)
-		{
-			free(input);
-			break;
-		}
-        //if (*input) 
-            //add_history(input);
-        tokens = ft_strtoken(input);
-        if (tokens) 
-        {
-            //for (int i = 0; tokens[i] != NULL; i++) 
-                //printf("Token %d: %s\n", i, tokens[i]);
-            shell = init_struct_shell(tokens, envp);
-        }
-        ft_execute(shell);
-    }
-    clear_history();
-    //clean_all
-    return 0;
+    if (argc != 1 && argv[1])
+        return (EXIT_FAILURE); //Add error msg
+    //init_shell(shell);
+    //init_signals(shell);
+    launch_minishell(shell);    
+    //Clean(shell); Free and clean everything
+    return (EXIT_SUCCESS);
 }

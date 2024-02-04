@@ -1,43 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putuint.c                                       :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 11:35:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/03 21:05:09 by fgranger         ###   ########.fr       */
+/*   Created: 2024/02/04 15:19:40 by fgranger          #+#    #+#             */
+/*   Updated: 2024/02/04 17:08:58 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/libft.h"
+#include "../../inc/minishell.h"
 
-int	ft_uintlen(unsigned int n)
+/*
+    built in env that prints the env variable with no options and no ARGUMENTS
+*/
+
+int ft_env(char **env,int argc)
 {
-	int	i;
+    int i;
 
-	i = 0;
-	if (n < 10)
-		return (1);
-	else
-	{
-		while (n > 0)
-		{
-			n /= 10;
-			i++;
-		}
-		return (i);
-	}
-}
-
-int	ft_putuint(unsigned int n)
-{
-	if (n < 10)
-		ft_putchar_fd(n + '0', 1);
-	else
-	{
-		ft_putnbr_fd(n / 10, 1);
-		ft_putchar_fd(n % 10 + '0', 1);
-	}
-	return (ft_uintlen(n));
+    i = 0;
+    if (argc > 0)
+        return (EXIT_FAILURE); //To do : ERROR MANAGEMENT too many arguments
+    while (env[i])
+    {
+        printf("%s\n", env[i]);
+        i++;
+    }
+    return (EXIT_SUCCESS);
 }

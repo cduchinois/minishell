@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct_initiation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 12:36:13 by yuewang           #+#    #+#             */
-/*   Updated: 2024/01/31 21:38:36 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/02/03 21:44:53 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,7 @@ t_shell *init_struct_shell(char **tokens, char *envp[])//HIST_ENTRY **history_li
     }
     if (shell->process_count > 1)
     {
-        shell->pid = (int *)malloc(sizeof(int) * (shell->process_count));
-	    //if (!shell->pid)
+        shell->pid = (int *)malloc(sizeof(int) * (shell->process_count +1));
 		//    error_handle;
     }
     else 

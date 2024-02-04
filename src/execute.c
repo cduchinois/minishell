@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:58:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/01/31 21:32:56 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/02/03 23:37:31 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void ft_execve(char **env, t_process *process) {
     char *const *exec_arg;  // Use 'char *const *' instead of 'const char **'
-
+	
     if (!process->pathname) {
         char *sh_args[] = {"/bin/sh", "-c", *process->args, NULL}; // Assuming process->args[0] is the command
         exec_arg = sh_args;
@@ -44,7 +44,7 @@ void	ft_execute(t_shell *shell)
 			ft_execve(shell->env, shell->processes[i]);
 			exit(1);
 		}
-		else
+		else if (shell->process_count > 1)
 		{
 			if (i > 0)
 				close(shell->processes[i - 1]->fd[0]);

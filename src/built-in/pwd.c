@@ -1,43 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putuint.c                                       :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 11:35:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/03 21:05:09 by fgranger         ###   ########.fr       */
+/*   Created: 2024/02/03 23:02:38 by fgranger          #+#    #+#             */
+/*   Updated: 2024/02/04 13:37:23 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/libft.h"
+#include "../../inc/minishell.h"
 
-int	ft_uintlen(unsigned int n)
+int ft_pwd(void)
 {
-	int	i;
+    char cwd[PATH_MAX + 1];
 
-	i = 0;
-	if (n < 10)
-		return (1);
-	else
-	{
-		while (n > 0)
-		{
-			n /= 10;
-			i++;
-		}
-		return (i);
-	}
-}
-
-int	ft_putuint(unsigned int n)
-{
-	if (n < 10)
-		ft_putchar_fd(n + '0', 1);
-	else
-	{
-		ft_putnbr_fd(n / 10, 1);
-		ft_putchar_fd(n % 10 + '0', 1);
-	}
-	return (ft_uintlen(n));
+    if (getcwd(cwd, PATH_MAX + 1))
+    {
+        printf("%s\n", cwd);
+        return(EXIT_SUCCESS);
+    }
+    return (EXIT_FAILURE);
 }
