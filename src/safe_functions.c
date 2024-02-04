@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   safe_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/04 15:19:40 by fgranger          #+#    #+#             */
-/*   Updated: 2024/02/04 21:25:53 by fgranger         ###   ########.fr       */
+/*   Created: 2024/02/04 18:04:09 by fgranger          #+#    #+#             */
+/*   Updated: 2024/02/04 18:24:02 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/minishell.h"
 
-/*
-    built in env that prints the env variable with no options and no ARGUMENTS
-*/
-
-int ft_env(char **env,int argc)
+void *safe_malloc(size_t size, t_shell *shell)
 {
-    int i;
+    void *allocated_mem;
 
-    i = 0;
-    if (argc > 0)
-        return (EXIT_FAILURE); //To do : ERROR MANAGEMENT too many arguments
-    while (env[i])
+    allocated_mem = malloc(size);
+    if (allocated_mem == NULL)
     {
-        ft_printf("%s\n", env[i]);
-        i++;
+        //error_print("malloc error");
+        //clean(shell);
+        exit(EXIT_FAILURE);
     }
-    return (EXIT_SUCCESS);
+    return (allocated_mem);
 }
+

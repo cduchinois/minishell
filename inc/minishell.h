@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/04 17:09:41 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/02/04 20:38:05 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ enum delimiter
     NOTHING
 };
 
+typedef struct s_prompt t_prompt;
+typedef struct s_shell t_shell;
+
 typedef struct s_process
 {
     char **env; 
@@ -59,10 +62,11 @@ typedef struct s_process
     char *command;
     int argc;
     char **args;
-    int *delimiter;
-    char *infile;
-    char *outfile;
+    int *delimiters;
     int fd[2];
+    int pid;
+    t_prompt *prompt;
+    t_shell *shell;
 } t_process;
 
 //Define the current prompt structure 
@@ -73,8 +77,7 @@ typedef struct s_process
         char **tokens which is the split of the raw input per instruction either space (one or more) or the quotes
         int process_count which is going to indicate the number of processes to be executed 1 + number of pipes
         char **env that from the shell structure
-        t_process *processes contains an array of the processes to be executed
-        int process_index to be initialized to 0 will be used during execution
+        t_process **processes contains an array of the processes to be executed
         int last_exit to be initialized to 0 will be completed during each exec of the prompt
         char * infile only if infile is set else init to NULL
         char * outfile only if outfile is set else init to NULL
@@ -89,21 +92,25 @@ typedef struct s_prompt
     int process_count;
     char **env;
     char *infile;
-    char *outile;
+    char *outfile;
     bool here_doc;
     bool append_mode; 
-    t_process *processes;
-    int process_index;
+    t_process **processes;
     int last_exit;
+    t_shell *shell;
 } t_prompt;
 
 // Define the shell structure
 /*
     Structure initialized once at the start of program with variable used for the scope of shell itself
     char **env; get env from main 
-    bool exit; set to false will be modified in case of exit command
     t_prompt prompt current prompt being executed / Last prompt
-    int_last_exit_code to be init to 0;
+    
+    bool exit; set to false will be modified in case of exit command
+    int exit_status init to 0 will be set with the last exit status recorded
+    int pid set with current pid start at 0;
+    int sigint signal management 
+    int sigquit signal management
     Other variable to be set later on 
 */
 typedef struct s_shell 
@@ -111,12 +118,17 @@ typedef struct s_shell
     char **env;
     t_prompt *prompt;
     bool exit;
-    int last_exit_code;
+    int exit_status;
+    int pid;
+    int sigint;
+    int sigquit;
 } t_shell;
 
 //To delete only for debuggin purposes
 void    print_process(t_process *process);
-void    print_shell(t_shell shell);
+void    print_prompt(t_prompt *prompt);
+void    print_shell(t_shell *shell);
+void mini_parser(t_shell *shell, char *line);
 //_________________________________________
 
 char **ft_strtoken(char *input);
@@ -126,11 +138,13 @@ t_shell *init_struct_shell(char **tokens, char *envp[]);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
 char	*get_pathname(char **env, char *command);
-void	ft_execute(t_shell *shell);
+void	ft_execute(t_prompt *prompt);
 
 // Built-in functions 
 int ft_echo(char **args);
 int ft_pwd(void);
 int ft_env(char **env, int argc);
 
+//safe functions
+void *safe_malloc(size_t size, t_shell *shell);
 #endif

@@ -6,51 +6,76 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:58:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/03 23:37:31 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/02/04 21:36:27 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void ft_execve(char **env, t_process *process) {
-    char *const *exec_arg;  // Use 'char *const *' instead of 'const char **'
+static void ft_exec_builtin(t_process *process)
+{
 	
-    if (!process->pathname) {
-        char *sh_args[] = {"/bin/sh", "-c", *process->args, NULL}; // Assuming process->args[0] is the command
-        exec_arg = sh_args;
-        execve("/bin/sh", exec_arg, env);
-    } else {
-        execve(process->pathname, process->args, env);
-    }
-    perror("execve failed");
-    exit(1);
+	if (ft_strcmp(process->command, "echo") == 0)
+		process->prompt->last_exit = ft_echo(process->args);
+	else if (ft_strcmp(process->command, "pwd") == 0)
+		process->prompt->last_exit = ft_pwd();
+	else if (ft_strcmp(process->command, "env") == 0)
+		process->prompt->last_exit = ft_env(process->shell->env, 0);
+	exit(process->prompt->last_exit);
 }
 
-void	ft_execute(t_shell *shell)
+static bool ft_is_builtin(char *cmd)
 {
-	int i = 0;
+	if (ft_strcmp(cmd, "echo") == 0)
+		return (true);
+	if (ft_strcmp(cmd, "pwd") == 0)
+		return (true);
+	if (ft_strcmp(cmd, "env") == 0)
+		return (true);
+	//other buit-ins to be added later on
+	return (false);
+}
 
-	if (shell->process_count == 1)
-		ft_execve(shell->env, shell->processes[0]);
-	while (i < shell->process_count)
+static void ft_exec_process(t_process *process)
+{
+	char *path;
+	
+    if (ft_is_builtin(process->command) == true)
+		ft_exec_builtin(process);
+	else
 	{
-		shell->pid[i] = fork();
-		if (shell->pid[i] < 0)
+		ft_printf("test");
+		path = get_pathname(process->shell->env, process->command);
+		ft_printf("%s", path);
+		execve(path, process->args, process->shell->env);
+	}
+}
+
+void	ft_execute(t_prompt *prompt)
+{
+	int i;
+	
+	i = 0;
+	if (prompt->process_count == 1 && ft_strcmp(prompt->processes[0]->command, "exit") == 0)
+		exit(0); // exit function builtin to code ;
+	while (i < prompt->process_count)
+	{
+		prompt->processes[i]->pid = fork();
+		if (prompt->processes[i]->pid < 0)
 		{
 			//error_handle
 		}
-		else if (shell->pid[i] == 0)
+		else if (prompt->processes[i]->pid == 0)
 		{
-			ft_execve(shell->env, shell->processes[i]);
-			exit(1);
+			//to do ft_pipe for redirections (including check if in or outfile and open function if appropriate)
+			ft_exec_process(prompt->processes[i]);
+			perror("exec_process");
+            exit(EXIT_FAILURE);
 		}
-		else if (shell->process_count > 1)
+		else
 		{
-			if (i > 0)
-				close(shell->processes[i - 1]->fd[0]);
-			if (i < shell->process_count - 1)
-				close(shell->processes[i]->fd[1]);
+			waitpid(prompt->processes[i]->pid, &prompt->last_exit, 0);
+			i++;
 		}
-		i++;
 	}
 }
