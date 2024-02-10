@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:58:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/04 21:36:27 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/02/10 07:04:22 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,25 @@ void	ft_execute(t_prompt *prompt)
 	int i;
 	
 	i = 0;
-	if (prompt->process_count == 1 && ft_strcmp(prompt->processes[0]->command, "exit") == 0)
+	if (prompt->process_count == 1 && ft_strcmp(prompt->process[0]->command, "exit") == 0)
 		exit(0); // exit function builtin to code ;
 	while (i < prompt->process_count)
 	{
-		prompt->processes[i]->pid = fork();
-		if (prompt->processes[i]->pid < 0)
+		prompt->process[i]->pid = fork();
+		if (prompt->process[i]->pid < 0)
 		{
 			//error_handle
 		}
-		else if (prompt->processes[i]->pid == 0)
+		else if (prompt->process[i]->pid == 0)
 		{
 			//to do ft_pipe for redirections (including check if in or outfile and open function if appropriate)
-			ft_exec_process(prompt->processes[i]);
+			ft_exec_process(prompt->process[i]);
 			perror("exec_process");
             exit(EXIT_FAILURE);
 		}
 		else
 		{
-			waitpid(prompt->processes[i]->pid, &prompt->last_exit, 0);
+			waitpid(prompt->process[i]->pid, &prompt->last_exit, 0);
 			i++;
 		}
 	}

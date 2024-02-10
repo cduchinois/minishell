@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:39:25 by yuewang           #+#    #+#             */
-/*   Updated: 2024/01/31 21:25:49 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/02/10 07:25:00 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,16 @@ char	*get_pathname(char **env, char *command)
 	while (*path)
 	{
 		pathname = create_full_path(*path, command);
-		if (pathname && access(pathname, F_OK & X_OK) == 0)
+		if (pathname && access(pathname, F_OK | X_OK) == 0)
 		{
 			free(command);
+			ft_freetab(path);
 			return (pathname);
 		}
 		free(pathname);
 		path++;
 	}
+	ft_freetab(path);
 	free(command);
 	return (NULL);
 }

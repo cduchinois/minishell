@@ -1,30 +1,33 @@
 // To delete, only for debugging purposes 
 #include "../inc/minishell.h"
-#include <stdio.h>
 
 void    print_shell(t_shell *shell)
 {
     int i = 0;
 
-    ft_printf("____SHELL______\n");
-    while (shell->env[i])
-    {
-        ft_printf("%s\n", shell->env[i]);
-        i++;
+    printf("____SHELL______\n");
+    //while (shell->env[i])
+    //{
+    //    ft_printf("%s\n", shell->env[i]);
+    //    i++;
+    //}
+    printf("exit = %d \n", shell->exit);
+    printf("exit_status = %d \n",shell->exit_status);
+    printf("pid = %d \n",shell->pid);
+    printf("sigquit = %d \n",shell->sigquit);
+    printf("sigint = %d \n",shell->sigint);
+    printf("__________________________\n");
+    if (shell->prompt) {
+        print_prompt(shell->prompt);
+    } else {
+        printf("No current prompt.\n");
     }
-    ft_printf("exit = %d \n", shell->exit);
-    ft_printf("exit_status = %d \n",shell->exit_status);
-    ft_printf("pid = %d \n",shell->pid);
-    ft_printf("sigquit = %d \n",shell->sigquit);
-    ft_printf("sigint = %d \n",shell->sigint);
-    ft_printf("__________________________\n");
-    //print_prompt(shell->prompt);
 }
 
 void    print_prompt(t_prompt *prompt)
 {
-    ft_printf("_____PROMPT_____\n");
-    ft_printf(" USER INPUT : %s \n ", prompt->user_input);
+    printf("_____PROMPT_____\n");
+    printf(" USER INPUT : %s \n ", prompt->user_input);
     int i = 0;
     while (prompt->tokens[i])
     {
@@ -32,35 +35,41 @@ void    print_prompt(t_prompt *prompt)
         i++;
     }
     printf("\nPROCESS COUNT : %d\n", prompt->process_count);
-    printf("INFILE : %s\n", prompt->infile);
-    printf("OUTFILE : %s\n", prompt->outfile);
-    printf("HEREDOC : %d\n", prompt->here_doc);
-    printf("APPEND MODE: %d\n", prompt->append_mode);
     printf("last_exit: %d\n", prompt->last_exit);
     i = 0;
     while (i < prompt->process_count)
     {
-        print_process(prompt->processes[i]);
+        print_process(prompt->process[i]);
         i++;
     }
 }
 
 void print_process(t_process *process)
 {
-    ft_printf("_____PROCESS %d_____\n", process->index);
-    ft_printf(" COMMAND : %s \n ", process->command);
-    ft_printf(" ARGC : %d \n ", process->argc);
-    ft_printf(" FD IN : %d \n ", process->fd[0]);
-    ft_printf(" FD OUT : %d \n ", process->fd[1]);
-    int i = 0;
-    while (process->args && process->args[i] != 0)
+    printf("_____PROCESS %d_____\n", process->index);
+    printf("COMMAND: %s\n", process->command ? process->command : "NULL");
+    printf(" ARGC : %d \n ", process->argc);
+    printf(" FD IN : %d \n ", process->fd[0]);
+    printf(" FD OUT : %d \n ", process->fd[1]);
+    t_lst_infile *infile_temp = process->infile;
+    while (infile_temp)
     {
-        ft_printf("ARGUMENT %d : %s | DELIMITER : %d | \n ",i, process->args[i], process->delimiters[i]);
-        i++;
+        printf("infile %s; here_doc %d\n", infile_temp->name, infile_temp->here_doc);
+        infile_temp = infile_temp->next;
+    }
+
+    t_lst_outfile *outfile_temp = process->outfile;
+    while (outfile_temp)
+    {
+        printf("outfile %s; append_mode %d\n", outfile_temp->name, outfile_temp->append_mode);
+        outfile_temp = outfile_temp->next;
+    }
+    for (int i = 0; process->args && process->args[i]; i++) {
+        printf("arg[%d]: %s\n", i, process->args[i]);
     }
 }
 
-void mini_parser(t_shell *shell, char *line)
+/*void mini_parser(t_shell *shell, char *line)
 {
     shell->prompt = malloc(sizeof(t_prompt));
     shell->prompt->user_input = line;
@@ -124,4 +133,4 @@ void mini_parser(t_shell *shell, char *line)
         }
         i++;
     }
-}
+}*/

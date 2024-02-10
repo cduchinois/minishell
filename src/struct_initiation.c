@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct_initiation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 12:36:13 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/03 21:44:53 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/02/10 14:31:10 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int count_pipes(char **tokens)
 {
     int pipe_count = 0;
 
-    for (int i = 0; tokens[i] != NULL; i++) {
+    for (int i = 0; tokens[i] != NULL; i++) 
+    {
         if (strcmp(tokens[i], "|") == 0) {
             pipe_count++;
         }
@@ -24,101 +25,194 @@ int count_pipes(char **tokens)
     return pipe_count;
 }
 
-char *get_infile(char **tokens, int *token_count, int *here_doc)
+t_lst_infile *create_infile_node(const char *filename, bool here_doc, t_shell *shell)
 {
-    for (int i = 0; i < *token_count - 1; i++)
+    t_lst_infile *node = (t_lst_infile *)safe_malloc(sizeof(t_lst_infile), shell);
+    node->name = strdup(filename);
+    node->here_doc = here_doc;
+    node->next = NULL;
+    return node;
+}
+
+void append_infile_node(t_lst_infile **head, t_lst_infile *new_node)
+{
+    if (!head || !new_node) return;
+
+    if (*head == NULL)
     {
-        if (strcmp(tokens[i], "<") == 0 || strcmp(tokens[i], "<<") == 0) 
+        *head = new_node;
+    } 
+    else 
+    {
+        t_lst_infile *current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = new_node;
+    }
+}
+
+t_lst_infile *infile_list_init(char **tokens, int token_count, t_process *process, t_shell *shell)
+{
+    int i = 0;
+    t_lst_infile *head = NULL;
+    t_lst_infile *new_node;
+
+    while (i < token_count) 
+    {
+        if ((ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], "<<") == 0) && i + 1 < token_count)
         {
-            *here_doc = strcmp(tokens[i], "<<");
-            char *infile = strdup(tokens[i + 1]);
-            *token_count -= 2;
-            return infile;
+            new_node = create_infile_node(tokens[i + 1], ft_strcmp(tokens[i], "<<") == 0 ? true : false, shell);
+            if (new_node)
+                append_infile_node(&head, new_node);
+            i += 2;
+            process->argc -= 2;
         }
+        else
+            i++;
     }
-    return NULL;
+    return head;
 }
 
-char *get_outfile(char **tokens, int *token_count, int *append_mode)
+t_lst_outfile *create_outfile_node(const char *filename, bool append_mode, t_shell *shell)
 {
-    for (int i = 0; i < *token_count - 1; i++)
-    {
-        if (strcmp(tokens[i], ">") == 0 || strcmp(tokens[i], ">>") == 0) {
-            *append_mode = (strcmp(tokens[i], ">>"));
-            char *outfile = strdup(tokens[i + 1]);
-            // Remove the redirection and filename tokens
-            *token_count -= 2;
-            return outfile;
-        }
-    }
-    return NULL;
+    t_lst_outfile *node = (t_lst_outfile *)safe_malloc(sizeof(t_lst_outfile), shell);
+    node->name = strdup(filename);
+    node->append_mode = append_mode;
+    node->next = NULL;
+    return node;
 }
 
-char **extract_arguments(char **tokens, int token_count) 
+void append_outfile_node(t_lst_outfile **head, t_lst_outfile *new_node) 
 {
-    char **args = malloc(sizeof(char *) * (token_count + 1));
-    if (!args) return NULL;
+    if (!head || !new_node) return;
 
-    int j = 0;
-    for (int i = 0; i < token_count; i++)
+    if (*head == NULL)
     {
-        if (!ft_isredirection(tokens[i]) && (i == 0 || !ft_isredirection(tokens[i - 1])))
-            args[j++] = strdup(tokens[i]);
+        *head = new_node;
+    } 
+    else
+    {
+        t_lst_outfile *current = *head;
+        while (current->next) 
+        {
+            current = current->next;
+        }
+        current->next = new_node;
+    }
+}
+
+t_lst_outfile *outfile_list_init(char **tokens, int token_count, t_process *process, t_shell *shell)
+{
+    t_lst_outfile *head = NULL;
+    int i = 0;
+
+    while (i < token_count) 
+    {
+        if ((ft_strcmp(tokens[i], ">") == 0 || ft_strcmp(tokens[i], ">>") == 0) && i + 1 < token_count) 
+        {
+            bool append_mode = ft_strcmp(tokens[i], ">>") == 0 ? true : false;
+            t_lst_outfile *new_node = create_outfile_node(tokens[i + 1], append_mode, shell);
+            if (new_node) 
+            {
+                append_outfile_node(&head, new_node);
+            }
+            i += 2;
+            process->argc -= 2;
+        } 
+        else
+        {
+            i++;
+        }
+    }
+    return head;
+}
+
+char **extract_arguments(char **tokens, int argc, t_shell *shell)
+{
+    char **args = safe_malloc((argc + 1) * sizeof(char *), shell);
+    int i = 0, j = 0; // i for tokens index, j for args index
+
+    while (i < argc)
+    {
+        printf("debug extract token:processing token: %s\n", tokens[i]);
+        if (ft_isredirection(tokens[i])) 
+        {
+            printf("Skipping redirection: %s %s\n", tokens[i], tokens[i+1]);            
+            i += 2;
+        } 
+        else 
+        {
+            args[j] = ft_strdup(tokens[i]);
+            printf("Adding arg[%d]: %s\n", j, args[j]); // Debug print
+            //handle strdup failure
+            j++;
+            i++;
+        }
     }
     args[j] = NULL;
     return args;
 }
 
-
-t_process *init_struct_process(char **tokens, int token_count, int index, char **env)
+t_process *process_init(char **tokens, int token_count, int index, t_shell *shell)
 {
-    t_process *process = malloc(sizeof(t_process));
-    if (!process) return NULL;
-
+    t_process *process = safe_malloc(sizeof(t_process), shell);
     process->index = index;
-    process->here_doc = 0;
-    process->append_mode = 0;
-    process->infile = get_infile(tokens, &token_count, &process->here_doc); //Implement a function parse the tokens and check if input redirection sign is present in the tokens, if yes and if it's < infile, return infile and here_doc = 0, if it's a << aka heredoc mode, return heredoc deliminator string as infile and process->here_doc = 1, otherwise return null for infile
-    process->outfile = get_infile(tokens, &token_count, &process->append_mode); //Implement a function parse the tokens and check if output redirection sign is present in the tokens, if yes and if it's > outfile, return outfile and appendmode = 0, if it's a >> aka append mode, return outfile and process->append_mode = 1, otherwise return null for outfile
-    process->args = extract_arguments(tokens, token_count); // parse tokens, exclude redirection tokens and the file token after them and all null at the end
-    process->command = process->args[0]; 
-    process->pathname = get_pathname(env, process->command);
+    process->argc = token_count;
+    process->infile = infile_list_init(tokens, token_count, process, shell);
+    process->outfile = outfile_list_init(tokens, token_count, process, shell);
+    process->args = extract_arguments(tokens, process->argc, shell);
+    printf("Extracted arguments:\n");
+    for (int k = 0; process->args[k] != NULL; k++) {
+        printf("arg[%d] %s\n", k, process->args[k]);
+    }
+    if (process->args && process->args[0])
+        process->command = ft_strdup(process->args[0]);
+    printf("Command: %s\n", process->command ? process->command : "NULL");
+    process->pathname = get_pathname(shell->env, process->command);
+    process->fd[0] = -1;
+    process->fd[1] = -1;
+    process->pid = -1;
+    process->return_status = 0;
+    process->prompt = shell->prompt;
+    process->shell = shell;
     return process;
 }
 
-t_shell *init_struct_shell(char **tokens, char *envp[])//HIST_ENTRY **history_list, 
+t_prompt *prompt_init(char *line, char **tokens, t_shell *shell)
 {
-    t_shell *shell = malloc(sizeof(t_shell));
-    if (!shell) return NULL;
-    shell->process_count = count_pipes(tokens) + 1;
-    //shell->history = history_list;
-    shell->env = envp;
-    shell->processes = malloc(sizeof(t_process *) * shell->process_count);
+    t_prompt *prompt;
+
+    prompt = safe_malloc(sizeof(t_prompt), shell);
+    prompt->user_input = line;
+    prompt->tokens = tokens;
+    prompt->process_count = count_pipes(tokens) + 1;
+    prompt->process = safe_malloc(prompt->process_count * sizeof(t_process *), shell);
     int start = 0;
-    for (int i = 0; i < shell->process_count; i++) 
+    int i = 0;
+    while (i < prompt->process_count) 
     {
         int end = start;
-        while (tokens[end] && strcmp(tokens[end], "|") != 0) {
+        while (tokens[end] && strcmp(tokens[end], "|") != 0)
             end++;
+        prompt->process[i] = process_init(&tokens[start], end - start, i, shell);
+        if (!prompt->process[i]) 
+        {
+            clean(shell);
+            exit(EXIT_FAILURE);
         }
-        shell->processes[i] = init_struct_process(&tokens[start], end - start, i, envp);
         start = end + 1;
+        i++;
     }
-    for (int i = 0; i < shell->process_count; i++) 
-    {
-        ft_fd_in(i, shell->processes); //setup shell->processes[i]->fd[0]
-        ft_fd_out(i, shell->processes, shell->process_count); //setup shell->processes[i]->fd[1]
-    }
-    if (shell->process_count > 1)
-    {
-        shell->pid = (int *)malloc(sizeof(int) * (shell->process_count +1));
-		//    error_handle;
-    }
-    else 
-    {
-        shell->pid = NULL;
-    }
-    return shell;
+    prompt->last_exit = prompt->process[prompt->process_count - 1]->return_status;
+    return (prompt);
 }
 
-
+void parse_line(t_shell *shell, char *line) 
+{
+    char **tokens = ft_strtoken(line, shell);
+    for (int i = 0; tokens[i] != NULL; i++) 
+        printf("Token %d: %s\n", i, tokens[i]);
+    if (!tokens) return;
+    shell->prompt = prompt_init(line, tokens, shell);
+}

@@ -6,17 +6,17 @@
 #    By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 15:50:42 by yuewang           #+#    #+#              #
-#    Updated: 2024/01/31 21:25:53 by yuewang          ###   ########.fr        #
+#    Updated: 2024/02/10 07:57:42 by yuewang          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 ########## ARGUMENTS ###########
 
 NAME	  = minishell
-CC		  = cc
-RLFLAG	  = -L/opt/homebrew/opt/readline/lib -I/opt/homebrew/opt/readline/include -lreadline #compile line for Yue
-# RLFLAG	  = -lreadline
-CFLAG	  = -Wall -Wextra -Werror -v
+CC		  = cc -g #-fsanitize=address
+#CFLAG	  = -Wall -Wextra -Werror #-v
+LDFLAGS   = -L/opt/homebrew/opt/readline/lib -lreadline
+CPPFLAGS  = -I inc/ -I src/libft/ -I/opt/homebrew/opt/readline/include
 INC_LIBFT = -I src/libft/
 INC		  = -I inc/
 RM		  = rm -f
@@ -39,11 +39,11 @@ $(LIBFT) :
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME) : $(OBJ) $(LIBFT)
-	$(CC) $(CFLAG) $(OBJ) -o $(NAME) $(LIBFT) $(RLFLAG)
+	$(CC) $(OBJ) -o $(NAME) $(LIBFT) $(LDFLAGS)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	@mkdir -p $(@D)
-	$(CC) $(CFLAG) $(INC) $(INC_LIBFT) -c $< -o $@
+	$(CC) $(CPPFLAGS) -c $< -o $@
 
 clean :
 	$(RM) $(OBJ)
