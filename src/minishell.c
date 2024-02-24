@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:09:41 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 14:49:50 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/02/24 16:18:17 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void minishell(t_shell *shell)
             add_history(line); // Add non-empty lines to history.
         //mini_parser(shell, line); //only to test before parse line function arrives
         parse_line(shell, line); // initilize prompt scope + process scope
-        print_shell(shell);
+        //print_shell(shell);
         //print_prompt(shell->prompt);
-        //ft_execute(shell->prompt);
+        ft_execute(shell->prompt);
         //clean_prompt(shell->prompt);
         //free(line);
     }

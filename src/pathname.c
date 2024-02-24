@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:39:25 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 07:25:00 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/02/24 16:23:30 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,32 +68,41 @@ char	*create_full_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-char	*get_pathname(char **env, char *command)
-{
-	char	*pathname;
-	char	**path;
-	
-	if (!command)
-		return (NULL);
-	path = find_path_from_envp(env, "PATH");
-	if (!path)
-	{
-		if (access(command, F_OK & X_OK) == 0)
-			return (command);
-	}
-	while (*path)
-	{
-		pathname = create_full_path(*path, command);
-		if (pathname && access(pathname, F_OK | X_OK) == 0)
-		{
-			free(command);
-			ft_freetab(path);
-			return (pathname);
-		}
-		free(pathname);
-		path++;
-	}
-	ft_freetab(path);
-	free(command);
-	return (NULL);
+char *get_pathname(char **env, char *command) {
+    char    *pathname = NULL;
+    char    **path;
+    char    *found_pathname = NULL; // Added to store the found pathname without prematurely freeing command
+
+    if (!command)
+        return (NULL);
+
+    path = find_path_from_envp(env, "PATH");
+    if (!path) {
+        if (access(command, F_OK | X_OK) == 0) // Corrected logical operator
+            return (command);
+        else {
+            free(command); // Free command if it's not executable and no path is found
+            return (NULL);
+        }
+    }
+
+    while (*path && !found_pathname) {
+        pathname = create_full_path(*path, command);
+        if (pathname && access(pathname, F_OK | X_OK) == 0) {
+            found_pathname = pathname;
+        } else {
+            free(pathname);
+        }
+        path++;
+    }
+
+    ft_freetab(path - (path - env)); // Adjust pointer arithmetic to ensure the original array is freed
+    if (found_pathname) {
+        free(command);
+        return found_pathname;
+    } else {
+        free(command);
+        return NULL;
+    }
 }
+
