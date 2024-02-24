@@ -169,7 +169,7 @@ t_process *process_init(char **tokens, int token_count, int index, t_shell *shel
     if (process->args && process->args[0])
         process->command = ft_strdup(process->args[0]);
     printf("Command: %s\n", process->command ? process->command : "NULL");
-    process->pathname = get_pathname(shell->env, process->command);
+    //process->pathname = get_pathname(shell->env, process->command);
     process->fd[0] = -1;
     process->fd[1] = -1;
     process->pid = -1;

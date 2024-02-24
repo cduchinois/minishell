@@ -13,5 +13,4 @@ int main(int ac, char **av, char **env)
     else if (ft_strcmp(av[1], "env") == 0)
         ft_env(env, ac - 2);
     return (0);
-
 }

@@ -39,7 +39,7 @@ int ft_echo(char **args)
     int i;
     int flag;
     
-    i = 0;
+    i = 1;
     flag = 0;
     while (ft_is_flag(args[i]) == true)
     {

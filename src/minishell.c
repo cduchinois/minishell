@@ -45,7 +45,7 @@ void minishell(t_shell *shell)
 int main(int argc, char **argv, char **envp) 
 {
     t_shell *shell = NULL;
-
+    
     (void)**argv;
     if (argc != 1)
         return (EXIT_FAILURE); //Add error msg
