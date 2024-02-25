@@ -57,7 +57,7 @@ void ft_child(t_prompt *prompt, int i)
 	}
 	else if (i == prompt->process_count - 1)
 		set_file(prompt, STDOUT_FILENO);
-	while(j <= prompt->process_count) 
+	while(j <= i) 
 	{
 		close(prompt->process[j]->fd[0]);
 		close(prompt->process[j]->fd[1]);
@@ -92,7 +92,6 @@ void ft_execute(t_prompt *prompt)
     if (prompt->process_count == 1 && ft_strcmp(prompt->process[0]->command, "exit") == 0)
         exit(0);
 	ft_set_pipes(prompt);
-	print_prompt(prompt);
     while (i < prompt->process_count)
     {
 		j = 0;
