@@ -22,7 +22,7 @@ int ft_env(char **env,int argc)
 
     i = 0;
     if (argc > 0)
-        return (EXIT_FAILURE); //To do : ERROR MANAGEMENT too many arguments
+        return (ft_putendl_fd("Too many arguments",2), EXIT_FAILURE);
     while (env[i])
     {
         ft_printf("%s\n", env[i]);

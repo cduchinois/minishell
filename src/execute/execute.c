@@ -90,7 +90,7 @@ void ft_execute(t_prompt *prompt)
 
     i = 0;
     if (prompt->process_count == 1 && ft_strcmp(prompt->process[0]->command, "exit") == 0)
-        exit(0);
+        ft_exit(prompt->process[i]);
 	ft_set_pipes(prompt);
     while (i < prompt->process_count)
     {

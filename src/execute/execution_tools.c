@@ -7,7 +7,13 @@ void ft_exec_builtin(t_process *process)
 	else if (ft_strcmp(process->command, "pwd") == 0)
 		process->prompt->last_exit = ft_pwd();
 	else if (ft_strcmp(process->command, "env") == 0)
-		process->prompt->last_exit = ft_env(process->shell->env, 0);
+		process->prompt->last_exit = ft_env(process->shell->env, process->argc - 1);
+	else if (ft_strcmp(process->command, "export") == 0)
+		process->prompt->last_exit = ft_export(process);
+	else if (ft_strcmp(process->command, "unset") == 0)
+		process->prompt->last_exit = ft_unset(process);
+	else if (ft_strcmp(process->command, "cd") == 0)
+		process->prompt->last_exit = ft_cd(process);
 	exit(process->prompt->last_exit);
 }
 
@@ -19,7 +25,12 @@ bool ft_is_builtin(char *cmd)
 		return (true);
 	if (ft_strcmp(cmd, "env") == 0)
 		return (true);
-	//other buit-ins to be added later on
+	if (ft_strcmp(cmd, "export") == 0)
+		return (true);
+	if (ft_strcmp(cmd, "unset") == 0)
+		return (true);
+	if (ft_strcmp(cmd, "cd") == 0)
+		return (true);
 	return (false);
 }
 

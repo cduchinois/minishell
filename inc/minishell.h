@@ -59,6 +59,10 @@ void ft_exec_process(t_process *process);
 int ft_echo(char **args);
 int ft_pwd(void);
 int ft_env(char **env, int argc);
+int ft_export(t_process *process);
+int ft_unset(t_process *process);
+int ft_exit(t_process *process);
+int ft_cd(t_process *process);
 
 //safe functions
 void *safe_malloc(size_t size, t_shell *shell);
