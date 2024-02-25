@@ -48,7 +48,12 @@ void init_shell(t_shell **shell, char **envp);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
 char	*get_pathname(char **env, char *command);
+
+//Execution
 void	ft_execute(t_prompt *prompt);
+bool ft_is_builtin(char *cmd);
+void ft_exec_builtin(t_process *process);
+void ft_exec_process(t_process *process);
 
 // Built-in functions 
 int ft_echo(char **args);

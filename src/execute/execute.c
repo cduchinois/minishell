@@ -12,70 +12,107 @@
 
 #include "../inc/minishell.h"
 
-static void ft_exec_builtin(t_process *process)
+void set_file(t_prompt *prompt, int file)
 {
-	
-	if (ft_strcmp(process->command, "echo") == 0)
-		process->prompt->last_exit = ft_echo(process->args);
-	else if (ft_strcmp(process->command, "pwd") == 0)
-		process->prompt->last_exit = ft_pwd();
-	else if (ft_strcmp(process->command, "env") == 0)
-		process->prompt->last_exit = ft_env(process->shell->env, 0);
-	exit(process->prompt->last_exit);
-}
+	t_lst_infile *infile;
+	t_lst_outfile *outfile;
+	int fd;
 
-static bool ft_is_builtin(char *cmd)
-{
-	if (ft_strcmp(cmd, "echo") == 0)
-		return (true);
-	if (ft_strcmp(cmd, "pwd") == 0)
-		return (true);
-	if (ft_strcmp(cmd, "env") == 0)
-		return (true);
-	//other buit-ins to be added later on
-	return (false);
-}
-
-static void ft_exec_process(t_process *process)
-{
-	char *path;
-	
-    if (ft_is_builtin(process->command) == true)
-		ft_exec_builtin(process);
-	else
+	if (file == STDIN_FILENO)
 	{
-		ft_printf("test");
-		path = get_pathname(process->shell->env, process->command);
-		ft_printf("%s", path);
-		execve(path, process->args, process->shell->env);
+		infile = prompt->process[0]->infile;
+		while (infile)
+		{
+			 fd = open(infile->name, O_RDONLY);
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+			infile = infile->next;
+		};
+	}
+	else if (file == STDOUT_FILENO)
+	{
+		outfile = prompt->process[prompt->process_count - 1]->outfile;
+		while (outfile)
+		{
+			fd = open(outfile->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+			outfile = outfile->next;
+		}
 	}
 }
 
-void	ft_execute(t_prompt *prompt)
+void ft_child(t_prompt *prompt, int i)
+{
+	int j;
+
+	j = 0;
+	if (i > 0)
+		dup2(prompt->process[i - 1]->fd[0], STDIN_FILENO);
+	else if (i == 0)
+		set_file(prompt, STDIN_FILENO);
+	if (i < prompt->process_count - 1)
+	{
+		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
+	}
+	else if (i == prompt->process_count - 1)
+		set_file(prompt, STDOUT_FILENO);
+	while(j <= prompt->process_count) 
+	{
+		close(prompt->process[j]->fd[0]);
+		close(prompt->process[j]->fd[1]);
+		j++;
+	}
+	ft_exec_process(prompt->process[i]);
+	perror("exec_process");
+	exit(EXIT_FAILURE);
+}
+
+void ft_set_pipes(t_prompt *prompt)
 {
 	int i;
-	
+
 	i = 0;
-	if (prompt->process_count == 1 && ft_strcmp(prompt->process[0]->command, "exit") == 0)
-		exit(0); // exit function builtin to code ;
-	while (i < prompt->process_count)
+    while (i < prompt->process_count)
 	{
-		prompt->process[i]->pid = fork();
-		if (prompt->process[i]->pid < 0)
+        if (pipe(prompt->process[i]->fd) == -1)
 		{
-			//error_handle
-		}
-		else if (prompt->process[i]->pid == 0)
-		{
-			//to do ft_pipe for redirections (including check if in or outfile and open function if appropriate)
-			ft_exec_process(prompt->process[i]);
-			perror("exec_process");
+            perror("pipe");
             exit(EXIT_FAILURE);
-		}
-		else
+        }
+		i++;
+    }
+}
+void ft_execute(t_prompt *prompt)
+{
+    int i;
+	int j;
+
+    i = 0;
+    if (prompt->process_count == 1 && ft_strcmp(prompt->process[0]->command, "exit") == 0)
+        exit(0);
+	ft_set_pipes(prompt);
+	print_prompt(prompt);
+    while (i < prompt->process_count)
+    {
+		j = 0;
+        prompt->process[i]->pid = fork();
+        if (prompt->process[i]->pid < 0)
+        {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+        else if (prompt->process[i]->pid == 0)
+            ft_child(prompt, i);
+        waitpid(prompt->process[i]->pid, &prompt->last_exit, 0);    
+        while(j <= i)
 		{
-			waitpid(prompt->process[i]->pid, &prompt->last_exit, 0);
-			i++;
+			if (i != j)
+				close(prompt->process[j]->fd[0]);
+			close(prompt->process[j]->fd[1]);
+			j++;
 		}
-	}
+        i++;
+    }
+	close(prompt->process[i - 1]->fd[0]);
 }
