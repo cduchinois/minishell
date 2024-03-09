@@ -6,11 +6,11 @@ void    print_shell(t_shell *shell)
     int i = 0;
 
     printf("____SHELL______\n");
-    //while (shell->env[i])
-    //{
-    //    ft_printf("%s\n", shell->env[i]);
-    //    i++;
-    //}
+    while (shell->env[i])
+    {
+        ft_printf("%s\n", shell->env[i]);
+        i++;
+    }
     printf("exit = %d \n", shell->exit);
     printf("exit_status = %d \n",shell->exit_status);
     printf("pid = %d \n",shell->pid);
@@ -68,6 +68,7 @@ void print_process(t_process *process)
         printf("arg[%d]: %s\n", i, process->args[i]);
     }
 }
+
 
 /*void mini_parser(t_shell *shell, char *line)
 {

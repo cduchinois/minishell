@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 15:24:20 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/09 09:35:26 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int ft_isredirection(char *s);
 void init_shell(t_shell **shell, char **envp);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
+char	**find_path_from_envp(char **envp, const char *var_name);
 char	*get_pathname(char **env, char *command);
 void	ft_execute(t_prompt *prompt);
 

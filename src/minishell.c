@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:09:41 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/24 16:18:17 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/09 12:04:27 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void minishell(t_shell *shell)
         //mini_parser(shell, line); //only to test before parse line function arrives
         parse_line(shell, line); // initilize prompt scope + process scope
         //print_shell(shell);
-        //print_prompt(shell->prompt);
-        ft_execute(shell->prompt);
+        print_prompt(shell->prompt);
+        //ft_execute(shell->prompt);
         //clean_prompt(shell->prompt);
         //free(line);
     }

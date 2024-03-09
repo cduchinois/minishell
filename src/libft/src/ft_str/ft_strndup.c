@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:13:42 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 14:43:26 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/03 14:56:38 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ char	*ft_strndup(const char *s, int n)
 {
 	char	*tab;
 	int		i;
-
+if (s == NULL) {
+        return NULL;
+    }
 	i = 0;
 	tab = malloc(sizeof(char) * (n + 1));
 	if (!tab)
