@@ -6,7 +6,7 @@
 #    By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 15:50:42 by yuewang           #+#    #+#              #
-#    Updated: 2024/02/24 15:24:02 by yuewang          ###   ########.fr        #
+#    Updated: 2024/03/09 12:16:15 by yuewang          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ LIBFT		= $(LIBFT_DIR)libft.a
 
 SRC_DIR    = src/
 SRC_FILES = $(wildcard $(SRC_DIR)*.c) $(wildcard $(SRC_DIR)execute/*.c) $(wildcard $(SRC_DIR)execute/built-in/*.c)
- #wildcard to be changed to sources filenames
+#wildcard to be changed to sources filenames
 OBJ_DIR    = obj/
 OBJ 	   = $(SRC_FILES:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 

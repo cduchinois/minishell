@@ -6,19 +6,19 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:40:56 by yuewang           #+#    #+#             */
-/*   Updated: 2023/12/19 12:54:03 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/09 09:46:10 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft.h"
 
-size_t	ft_digilen(int n)
+size_t	ft_digilen_itoa(int n)
 {
 	int	i;
 
 	i = 0;
 	if (n < 0)
-		return (ft_digilen(-n) + 1);
+		return (ft_digilen_itoa(-n) + 1);
 	else if (n >= 0 && n < 10)
 		return (1);
 	else
@@ -57,7 +57,7 @@ char	*ft_itoa(int n)
 
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
-	l = ft_digilen(n);
+	l = ft_digilen_itoa(n);
 	c = malloc(sizeof(char) * (l + 1));
 	if (!c)
 		return (0);
