@@ -1,16 +1,21 @@
 // To delete, only for debugging purposes 
 #include "../inc/minishell.h"
 
+
+void print_env(t_lst_env *env_list)
+{
+    t_lst_env *current = env_list;
+    while (current != NULL) {
+        printf("%s=%s\n", current->key, current->value);
+        current = current->next;
+    }
+}
 void    print_shell(t_shell *shell)
 {
     int i = 0;
 
     printf("____SHELL______\n");
-    //while (shell->env[i])
-    //{
-    //    ft_printf("%s\n", shell->env[i]);
-    //    i++;
-    //}
+    print_env(shell->env);
     printf("exit = %d \n", shell->exit);
     printf("exit_status = %d \n",shell->exit_status);
     printf("pid = %d \n",shell->pid);

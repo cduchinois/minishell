@@ -6,30 +6,22 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:39:25 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/24 16:23:30 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/10 20:03:52 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	**find_path_from_envp(char **envp, const char *var_name)
+t_lst_env *find_path_from_envp(t_lst_env *env_list, const char *var_name)
 {
-	char	**path;
-	int		i;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], var_name, ft_strlen(var_name)) == 0)
-		{
-			path = ft_split((envp[i] + ft_strlen(var_name) + 1), ':');
-			if (!path)
-				return (NULL);
-			return (path);
-		}
-		i++;
-	}
-	return (NULL);
+    while (env_list)
+    {
+        if (ft_strncmp(env_list->key, var_name, strlen(var_name)) == 0) {
+            return env_list;
+        }
+        env_list = env_list->next;
+    }
+    return NULL;
 }
 
 char	*get_first_word(char *str)
@@ -68,36 +60,46 @@ char	*create_full_path(char *dir, char *cmd)
 	return (full_path);
 }
 
-char *get_pathname(char **env, char *command) {
+char *get_pathname(t_lst_env *env, char *command)
+{
     char    *pathname = NULL;
+    t_lst_env *path_env;
     char    **path;
-    char    *found_pathname = NULL; // Added to store the found pathname without prematurely freeing command
+    char    *found_pathname = NULL;
 
-    if (!command)
-        return (NULL);
+    if (!command) return (NULL);
 
-    path = find_path_from_envp(env, "PATH");
-    if (!path) {
-        if (access(command, F_OK | X_OK) == 0) // Corrected logical operator
+    path_env = find_path_from_envp(env, "PATH");
+    if (!path_env || !(path_env->value))
+    {
+        if (access(command, F_OK | X_OK) == 0)
             return (command);
         else {
-            free(command); // Free command if it's not executable and no path is found
+            free(command);
             return (NULL);
         }
     }
 
-    while (*path && !found_pathname) {
-        pathname = create_full_path(*path, command);
+    path = ft_split(path_env->value, ':');
+    if (!path) {
+        free(command);
+        return NULL;
+    }
+
+    for (int i = 0; path[i] && !found_pathname; i++)
+    {
+        pathname = create_full_path(path[i], command);
         if (pathname && access(pathname, F_OK | X_OK) == 0) {
             found_pathname = pathname;
         } else {
             free(pathname);
         }
-        path++;
     }
 
-    //ft_freetab(path - (path - env)); // Adjust pointer arithmetic to ensure the original array is freed
-    if (found_pathname) {
+    ft_freetab(path);
+
+    if (found_pathname)
+    {
         free(command);
         return found_pathname;
     } else {
@@ -105,4 +107,5 @@ char *get_pathname(char **env, char *command) {
         return NULL;
     }
 }
+
 

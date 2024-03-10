@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 06:39:08 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 06:57:19 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/10 19:59:02 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,26 @@ void free_prompt(t_prompt *prompt)
     }
 }
 
+void ft_free_env(t_lst_env *env)
+{
+    t_lst_env *temp;
+
+    while (env)
+    {
+        temp = env;
+        env = env->next;
+        free(temp->key);
+        free(temp->value);
+        free(temp);
+    }
+}
+
 void clean(t_shell *shell) 
 {
     if (shell)
     {
         if (shell->env)
-            ft_freetab(shell->env);
+            ft_free_env(shell->env);
         if (shell->prompt)
             free_prompt(shell->prompt);
         free(shell);
