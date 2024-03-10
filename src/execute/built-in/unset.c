@@ -2,5 +2,6 @@
 
 int ft_unset(t_process *process)
 {
-    ft_printf("unset to be coded\n");
+    int i;
+    
 }

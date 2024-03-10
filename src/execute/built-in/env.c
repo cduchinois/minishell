@@ -12,10 +12,6 @@
 
 #include "../../inc/minishell.h"
 
-/*
-    built in env that prints the env variable with no options and no ARGUMENTS
-*/
-
 int ft_env(char **env,int argc)
 {
     int i;

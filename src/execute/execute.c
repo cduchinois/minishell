@@ -12,33 +12,31 @@
 
 #include "../inc/minishell.h"
 
-void set_file(t_prompt *prompt, int file)
+void set_fd(t_prompt *prompt, int i)
 {
 	t_lst_infile *infile;
 	t_lst_outfile *outfile;
 	int fd;
 
-	if (file == STDIN_FILENO)
+	infile = prompt->process[i]->infile;
+	if (i > 0)
+		dup2(prompt->process[i - 1]->fd[0], STDIN_FILENO);
+	while (infile)
 	{
-		infile = prompt->process[0]->infile;
-		while (infile)
-		{
-			 fd = open(infile->name, O_RDONLY);
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-			infile = infile->next;
-		};
+		fd = open(infile->name, O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		infile = infile->next;
 	}
-	else if (file == STDOUT_FILENO)
+	outfile = prompt->process[i]->outfile;
+	if (i < prompt->process_count - 1)
+		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
+	while (outfile)
 	{
-		outfile = prompt->process[prompt->process_count - 1]->outfile;
-		while (outfile)
-		{
-			fd = open(outfile->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-			outfile = outfile->next;
-		}
+		fd = open(outfile->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		outfile = outfile->next;
 	}
 }
 
@@ -47,16 +45,7 @@ void ft_child(t_prompt *prompt, int i)
 	int j;
 
 	j = 0;
-	if (i > 0)
-		dup2(prompt->process[i - 1]->fd[0], STDIN_FILENO);
-	else if (i == 0)
-		set_file(prompt, STDIN_FILENO);
-	if (i < prompt->process_count - 1)
-	{
-		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
-	}
-	else if (i == prompt->process_count - 1)
-		set_file(prompt, STDOUT_FILENO);
+	set_fd(prompt, i);
 	while(j <= i) 
 	{
 		close(prompt->process[j]->fd[0]);
