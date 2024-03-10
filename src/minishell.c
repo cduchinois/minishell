@@ -29,6 +29,7 @@ void minishell(t_shell *shell)
         //print_shell(shell);
         //print_prompt(shell->prompt);
         ft_execute(shell->prompt);
+        //ft_export(shell->prompt->process[0]);
         //clean_prompt(shell->prompt);
         //free(line);
     }
