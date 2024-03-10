@@ -131,21 +131,20 @@ t_lst_outfile *outfile_list_init(char **tokens, int token_count, t_process *proc
 char **extract_arguments(char **tokens, int argc, t_shell *shell)
 {
     char **args = safe_malloc((argc + 1) * sizeof(char *), shell);
-    int i = 0, j = 0; // i for tokens index, j for args index
-
-    while (i < argc)
+    int i = 0, j = 0;
+    while (j < argc)
     {
-        //printf("debug extract token:processing token: %s\n", tokens[i]);
-        if (ft_isredirection(tokens[i])) 
+        if (ft_isredirection(tokens[i]) && tokens[i + 1])
         {
-            //printf("Skipping redirection: %s %s\n", tokens[i], tokens[i+1]);            
             i += 2;
-        } 
-        else 
+        }
+        else if (ft_isredirection(tokens[i]) && !tokens[i + 1])
+        {
+            i ++;
+        }
+        else
         {
             args[j] = ft_strdup(tokens[i]);
-            //printf("Adding arg[%d]: %s\n", j, args[j]); // Debug print
-            //handle strdup failure
             j++;
             i++;
         }
@@ -156,20 +155,15 @@ char **extract_arguments(char **tokens, int argc, t_shell *shell)
 
 t_process *process_init(char **tokens, int token_count, int index, t_shell *shell, t_prompt *prompt)
 {
+    
     t_process *process = safe_malloc(sizeof(t_process), shell);
     process->index = index;
     process->argc = token_count;
     process->infile = infile_list_init(tokens, token_count, process, shell);
     process->outfile = outfile_list_init(tokens, token_count, process, shell);
     process->args = extract_arguments(tokens, process->argc, shell);
-    //printf("Extracted arguments:\n");
-    for (int k = 0; process->args[k] != NULL; k++) {
-        //printf("arg[%d] %s\n", k, process->args[k]);
-    }
     if (process->args && process->args[0])
         process->command = ft_strdup(process->args[0]);
-    //printf("Command: %s\n", process->command ? process->command : "NULL");
-    //process->pathname = get_pathname(shell->env, process->command);
     process->fd[0] = -1;
     process->fd[1] = -1;
     process->pid = -1;
@@ -210,9 +204,8 @@ t_prompt *prompt_init(char *line, char **tokens, t_shell *shell)
 
 void parse_line(t_shell *shell, char *line) 
 {
-    char **tokens = ft_strtoken(line, shell);
-    for (int i = 0; tokens[i] != NULL; i++) 
-        //printf("Token %d: %s\n", i, tokens[i]);
+    char *input = ft_strdup(line);
+    char **tokens = ft_strtoken(input, shell);
     if (!tokens) return;
     shell->prompt = prompt_init(line, tokens, shell);
 }

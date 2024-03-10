@@ -31,13 +31,21 @@ enum delimiter
 {
     DQUOTES,
     SQUOTES,
-    NOTHING
+    NOTHING,
+};
+
+enum export_status
+{
+    UNVALID,
+    EMPTY,
+    VALID,
 };
 
 typedef struct s_prompt t_prompt;
 typedef struct s_shell t_shell;
 typedef struct s_lst_infile t_lst_infile;
 typedef struct s_lst_outfile t_lst_outfile;
+typedef struct s_lst_outfile t_lst_env;
 
 typedef struct s_process
 {
@@ -98,7 +106,7 @@ typedef struct s_prompt
 */
 typedef struct s_shell
 {
-    char **env;
+    t_lst_env *env;
     t_prompt *prompt;
     bool exit;
     int exit_status;
@@ -121,4 +129,11 @@ typedef struct s_lst_outfile
     struct s_lst_outfile *next;
 } t_lst_outfile;
 
+typedef struct s_lst_env
+{
+    char *var_name;
+    char *var_content;
+    bool    export_only;
+    t_lst_env *next;
+}   t_lst_env;
 #endif

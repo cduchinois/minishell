@@ -12,13 +12,13 @@
 
 #include "../../inc/libft.h"
 
-size_t	ft_digilen(int n)
+size_t	ft_digilenght(int n)
 {
 	int	i;
 
 	i = 0;
 	if (n < 0)
-		return (ft_digilen(-n) + 1);
+		return (ft_digilenght(-n) + 1);
 	else if (n >= 0 && n < 10)
 		return (1);
 	else
@@ -57,7 +57,7 @@ char	*ft_itoa(int n)
 
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
-	l = ft_digilen(n);
+	l = ft_digilenght(n);
 	c = malloc(sizeof(char) * (l + 1));
 	if (!c)
 		return (0);

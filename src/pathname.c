@@ -96,7 +96,7 @@ char *get_pathname(char **env, char *command) {
         path++;
     }
 
-    ft_freetab(path - (path - env)); // Adjust pointer arithmetic to ensure the original array is freed
+    //ft_freetab(path - (path - env)); // Adjust pointer arithmetic to ensure the original array is freed
     if (found_pathname) {
         free(command);
         return found_pathname;
