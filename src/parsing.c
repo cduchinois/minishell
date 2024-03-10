@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_initiation.c                                :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 12:36:13 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 14:31:10 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/10 21:12:40 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_lst_infile *infile_list_init(char **tokens, int token_count, t_process *proces
 
     while (i < token_count) 
     {
-        if ((ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], "<<") == 0) && i + 1 < token_count)
+        if ((ft_strcmps(tokens[i], "<") == 0 || ft_strcmp(tokens[i], "<<") == 0))
         {
             new_node = create_infile_node(tokens[i + 1], ft_strcmp(tokens[i], "<<") == 0 ? true : false, shell);
             if (new_node)

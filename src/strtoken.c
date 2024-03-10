@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 21:00:39 by yuewang           #+#    #+#             */
-/*   Updated: 2024/02/10 15:11:19 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/10 21:41:27 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ int handle_pipe(const char *input, int *i, int in_single_quote, int in_double_qu
 
 int ft_isredirection(char *s) 
 {
-    if (s == NULL) {
-        return 0; // s is NULL, so it cannot be a redirection token.
+    if (s == NULL)
+    {
+        return 0;
     }
     return (s[0] == '>' || s[0] == '<');
 }
@@ -108,7 +109,7 @@ int find_start(char *input, int *index, bool *in_single_quote, bool *in_double_q
         }
         else if (!*in_single_quote && !*in_double_quote && input[*index] == '<' || input[*index] == '>')
         {
-                        return (*index);
+            return (*index);
         }
         else 
             return *index;
@@ -164,19 +165,17 @@ char *append_char(char *str, char c)
 }
 
 
-char	*find_var_from_envp(char **envp, const char *var_name)
+char	*find_var_from_envp(t_lst_env *env, char *var_name)
 {
 	char	*varible;
-	int		i;
-
-	i = 0;
-	while (envp[i])
+	
+	while (env)
     {
-        if (ft_strncmp(envp[i], var_name, ft_strlen(var_name)) == 0 && envp[i][ft_strlen(var_name)] == '=')
+        if (ft_strncmp(env->key, var_name, ft_strlen(var_name)) == 0)
         {
-            return envp[i] + ft_strlen(var_name) + 1;
+            return env->value;
         }
-        i++;
+        env = env->next;
     }
 	return (NULL);
 }
@@ -281,30 +280,50 @@ char *extract_token(char *input, int *index, bool *in_single_quote, bool *in_dou
     return NULL;
 }
 
-int count_tokens(char *input) {
+int count_tokens(char *input)
+{
     int index = 0;
     int token_count = 0;
     bool in_single_quote = false, in_double_quote = false;
 
-    while (input[index]) {
+    while (input[index])
+    {
         int start = find_start(input, &index, &in_single_quote, &in_double_quote);
-        if (start == -1) // If no more tokens can be found, break the loop
+        if (start == -1)
             break;
 
         int end = find_end(input, &index, &in_single_quote, &in_double_quote);
-        if (start < end) {
+        if (start < end)
+        {
             token_count++;
         }
-      
-    }
-    if (in_single_quote || in_double_quote)
-    {
-        perror ("Error: incomplete quote\n");
-        return -1;
     }
     return token_count;
 }
 
+void token_safe_check(char **tokens, bool *in_single_quote, bool *in_double_quote)
+{
+    int i;
+
+    i = 0;
+    if (*in_single_quote || *in_double_quote)
+    {
+        perror ("Error: incomplete quote\n");
+        exit(1);
+    }
+    while (tokens[i])
+    {
+        if (ft_isredirection(tokens[i]) == !0)
+        {
+            if (!tokens[i + 1] || ft_strcmp(tokens[i + 1], "|") == 0)
+            {
+                perror ("Error: redirection file missing\n");
+                exit(1);
+            }    
+        }    
+        i++;
+    }
+}
 
 char **ft_strtoken(char *input, t_shell *shell)
 {
@@ -323,9 +342,11 @@ char **ft_strtoken(char *input, t_shell *shell)
     {
         char *token = extract_token(input, &i, &in_single_quote, &in_double_quote, shell);
         if (token)
-            tokens[k++] = token;
+            tokens[k++] = ft_strdup(token);
+        free(token);            
     }
     tokens[k] = NULL;
+    token_safe_check(tokens, &in_double_quote, &in_single_quote);
     return tokens;
 }
 
