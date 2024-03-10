@@ -1,7 +1,6 @@
 #include "../inc/minishell.h"
 
-// int ft_unset(t_process *process)
-// {
-//     int i;
-    
-// }
+int ft_unset(t_process *process)
+{
+ //   
+}

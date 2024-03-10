@@ -266,7 +266,6 @@ char *extract_token(char *input, int *index, bool *in_single_quote, bool *in_dou
     if (start < end) 
     {
         char *token = ft_strndup(input + start, end - start);
-        printf("token: %s\n", token);
         if ((ft_strchr(token, '$') == NULL || was_in_single_quote))
         {
             return token;
@@ -310,9 +309,7 @@ char **ft_strtoken(char *input, t_shell *shell)
 {
     int i = 0, k = 0;
     bool in_single_quote = false, in_double_quote = false;
-    int token_count = count_tokens(input);
-    printf("token_count: %d\n", token_count);
-    
+    int token_count = count_tokens(input);    
     if (token_count <= 0) return NULL;
 
     char **tokens = safe_malloc((token_count + 1) * sizeof(char *), shell);

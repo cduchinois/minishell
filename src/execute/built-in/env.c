@@ -12,17 +12,18 @@
 
 #include "../../inc/minishell.h"
 
-int ft_env(char **env,int argc)
+int ft_env(t_lst_env *env, int argc)
 {
     int i;
 
     i = 0;
     if (argc > 0)
         return (ft_putendl_fd("Too many arguments",2), EXIT_FAILURE);
-    while (env[i])
+    while (env)
     {
-        ft_printf("%s\n", env[i]);
-        i++;
+        if (env->export_only == false)
+            ft_printf("%s=%s\n", env->key, env->value);
+        env = env->next;
     }
     return (EXIT_SUCCESS);
 }
