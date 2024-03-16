@@ -26,7 +26,6 @@ char **rebuild_env(t_lst_env *env)
 	}
 	env_tab[i] = NULL;
 	return(env_tab);
-
 }
 
 void ft_exec_builtin(t_process *process)
@@ -43,7 +42,6 @@ void ft_exec_builtin(t_process *process)
 		process->prompt->last_exit = ft_unset(process);
 	else if (ft_strcmp(process->command, "cd") == 0)
 		process->prompt->last_exit = ft_cd(process);
-	exit(process->prompt->last_exit);
 }
 
 bool ft_is_builtin(char *cmd)

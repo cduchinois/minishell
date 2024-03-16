@@ -56,6 +56,10 @@ void parse_line(t_shell *shell, char *line)
 {
     char *input = ft_strdup(line);
     char **tokens = ft_strtoken(input, shell);
-    if (!tokens) return;
+    if (!tokens) 
+    {
+        shell->error = EMPTY;
+        return;
+    }
     shell->prompt = prompt_init(line, tokens, shell);
 }

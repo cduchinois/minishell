@@ -15,6 +15,19 @@
 //signal management to implement in the loop
 //loop : read / parse / execute / free
 
+int ft_parsing_error(int error_code)
+{
+    if error_code == EMPTY
+        return (EXIT_FAILURE);
+    else if error_code == QUOTES
+    {
+        ft_printf("quote error");
+        return (EXIT_FAILURE);
+    }
+    return (EXIT_SUCCESS);
+}
+
+
 void minishell(t_shell *shell) {
     char *line;
 
@@ -34,8 +47,10 @@ void minishell(t_shell *shell) {
             // if (line && *line) {
                 setup_signal_handlers_non_empty_line();
                 add_history(line); // Add non-empty lines to history.
-                parse_line(shell, line); // Initialize prompt scope + process scope
-                ft_execute(shell->prompt); // Execute the parsed command
+                parse_line(shell, line);
+
+                if (ft_parsing_error(shell->error))// Initialize prompt scope + process scope
+                    ft_execute(shell->prompt); // Execute the parsed command
             // } else {
             //     // If line is effectively empty (only spaces, for instance), revert to default handling
                 setup_signal_handlers();

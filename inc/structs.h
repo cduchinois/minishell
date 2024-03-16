@@ -27,11 +27,12 @@
 	int *delemiter the delimiter is the same size as the args for each args I need to know how it was find (between quotes, single quotes or nothing)
 		THe int delimiter array values are stated in enum delimiter
 */
-enum delimiter
+
+enum error
 {
-	DQUOTES,
-	SQUOTES,
-	NOTHING,
+	QUOTES,
+	EMPTY,
+	OUTFILE,
 };
 
 enum export_status
@@ -111,6 +112,7 @@ typedef struct s_shell
 	bool exit;
 	int exit_status;
 	int pid;
+	int error;
 	// int sigint;
 	// int sigquit;
 } t_shell;

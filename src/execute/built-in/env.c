@@ -15,14 +15,19 @@
 int ft_env(t_lst_env *env, int argc)
 {
     int i;
-
     i = 0;
+
     if (argc > 0)
         return (ft_putendl_fd("Too many arguments",2), EXIT_FAILURE);
     while (env)
     {
         if (env->export_only == false)
-            ft_printf("%s=%s\n", env->key, env->value);
+        {
+            if (!strcmp(env->value, "\'\'"))
+                ft_printf("%s=%s\n", env->key, "");
+            else
+                ft_printf("%s=%s\n", env->key, env->value);
+        }
         env = env->next;
     }
     return (EXIT_SUCCESS);

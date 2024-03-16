@@ -67,6 +67,8 @@ void init_shell(t_shell **shell, char **envp);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
 char    *find_var_from_envp(t_lst_env *env, char *var_name);
+t_lst_env *env_new_node(char *key, const char *value, bool export_only, t_shell *shell);
+void env_append(t_lst_env **lst, t_lst_env *new_node);
 
 //signal_________________________________________
 void setup_signal_handlers();
@@ -91,6 +93,7 @@ int ft_cd(t_process *process);
 
 //safe functions
 void *safe_malloc(size_t size, t_shell *shell);
-void clean(t_shell *shell); 
+void clean(t_shell *shell);
+void ft_free_env(t_lst_env *env);
 
 #endif
