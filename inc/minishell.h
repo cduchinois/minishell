@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/10 20:12:47 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/16 17:54:50 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <readline/history.h>
 # include <limits.h>
 # include <stdbool.h>
+# include <signal.h>
 
 //PATH_MAX define value to be checked for linux the define on mac is 1024 and 260 on PC 
 
@@ -37,17 +38,41 @@
 void    print_process(t_process *process);
 void    print_prompt(t_prompt *prompt);
 void    print_shell(t_shell *shell);
-void mini_parser(t_shell *shell, char *line);
-void parse_line(t_shell *shell, char *line);
-//_________________________________________
+void    mini_parser(t_shell *shell, char *line);
+void    parse_line(t_shell *shell, char *line);
+
+//parsing_________________________________________
 
 char **ft_strtoken(char *input, t_shell *shell); 
-int ft_isredirection(char *s);
+char *extract_token(char *input, int *index, t_shell *shell);
+char *ft_expand_token(char *token, t_shell *shell);
+int find_start(char *input, int *index, bool *in_squote, bool *in_dquote);
+int find_end(char *input, int *index, bool *squote, bool *dquote);
+
+t_lst_infile *create_infile_node(const char *filename, bool here_doc, t_shell *shell);
+void append_infile_node(t_lst_infile **head, t_lst_infile *new_node);
+t_lst_outfile *create_outfile_node(const char *filename, int append_mode, t_shell *shell);
+void append_outfile_node(t_lst_outfile **head, t_lst_outfile *new_node);
+
+int count_pipes(char **tokens);
+char **extract_arguments(char **tokens, int argc, t_shell *shell);
+
+t_prompt *prompt_init(char *line, char **tokens, t_shell *shell);
+
+int ft_isredir(char *s);
+int ft_redirlen(char *s);
+
 
 void init_shell(t_shell **shell, char **envp);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
-t_lst_env *find_path_from_envp(t_lst_env *env_list, const char *var_name);
+char    *find_var_from_envp(t_lst_env *env, char *var_name);
+
+//signal_________________________________________
+void setup_signal_handlers();
+void setup_signal_handlers_non_empty_line();
+
+
 
 //Execution
 void	ft_execute(t_prompt *prompt);

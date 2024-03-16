@@ -6,7 +6,7 @@
 #    By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 15:50:42 by yuewang           #+#    #+#              #
-#    Updated: 2024/02/24 15:24:02 by yuewang          ###   ########.fr        #
+#    Updated: 2024/03/16 12:26:37 by yuewang          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME	  = minishell
 CC		  = cc -g #-fsanitize=address
-#CFLAG	  = -Wall -Wextra -Werror #-v
+CFLAG	  = -Wall -Wextra -Werror #-v
 LDFLAGS   = -L/opt/homebrew/opt/readline/lib -lreadline
 CPPFLAGS  = -I inc/ -I src/libft/ -I/opt/homebrew/opt/readline/include
 INC_LIBFT = -I src/libft/
@@ -27,7 +27,7 @@ LIBFT_DIR 	= src/libft/
 LIBFT		= $(LIBFT_DIR)libft.a
 
 SRC_DIR    = src/
-SRC_FILES = $(wildcard $(SRC_DIR)*.c) $(wildcard $(SRC_DIR)execute/*.c) $(wildcard $(SRC_DIR)execute/built-in/*.c)
+SRC_FILES = $(wildcard $(SRC_DIR)*.c) $(wildcard $(SRC_DIR)execute/*.c) $(wildcard $(SRC_DIR)execute/built-in/*.c) $(wildcard $(SRC_DIR)parsing/*.c) $(wildcard $(SRC_DIR)signal/*.c)
  #wildcard to be changed to sources filenames
 OBJ_DIR    = obj/
 OBJ 	   = $(SRC_FILES:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)

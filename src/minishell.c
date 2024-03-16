@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:09:41 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/10 20:21:00 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/16 17:49:47 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,35 @@
 //signal management to implement in the loop
 //loop : read / parse / execute / free
 
-void minishell(t_shell *shell)
-{
+void minishell(t_shell *shell) {
     char *line;
-    
-    while (shell->exit == false)
-    {
+
+    // Initialize with the default signal handlers
+    setup_signal_handlers();
+
+    while (!shell->exit) {
         line = readline("Minishell >");
-        if (line && *line)
-            add_history(line); // Add non-empty lines to history.
-        //mini_parser(shell, line); //only to test before parse line function arrives
-        parse_line(shell, line); // initilize prompt scope + process scope
-        //print_shell(shell);
-        //print_prompt(shell->prompt);
-        ft_execute(shell->prompt);
-        //ft_export(shell->prompt->process[0]);
-        //clean_prompt(shell->prompt);
-        //free(line);
+        
+        if (!line) {
+            if (rl_end == 0) { // Ctrl-D (EOF) on an empty prompt.
+                shell->exit = true;
+            } else {
+                continue; // Ignore Ctrl-D with input, effectively getting a new prompt.
+            }
+        } else {
+            // if (line && *line) {
+                setup_signal_handlers_non_empty_line();
+                add_history(line); // Add non-empty lines to history.
+                parse_line(shell, line); // Initialize prompt scope + process scope
+                ft_execute(shell->prompt); // Execute the parsed command
+            // } else {
+            //     // If line is effectively empty (only spaces, for instance), revert to default handling
+                setup_signal_handlers();
+            free(line); // Free the line
+        }
     }
 }
+
 
 /*
     Minishell must not have any argument : if argc <> 1 return and display error

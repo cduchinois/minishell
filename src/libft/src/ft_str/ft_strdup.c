@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/20 17:19:44 by yuewang           #+#    #+#             */
-/*   Updated: 2023/12/19 12:53:03 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/16 13:57:06 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ and can be freed with free(3).*/
 	int		i;
 
 	i = 0;
+    if (!s)
+    {
+        return (0);
+    }
 	tab = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!tab)
 		return (0);

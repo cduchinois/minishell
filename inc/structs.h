@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:22:37 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/10 20:12:20 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/16 17:50:00 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ typedef struct s_prompt
 	char **tokens;
 	t_process **process;
 	int process_count;
-	bool here_doc;
-	bool append_mode;
+	// bool here_doc;
+	// bool append_mode;
 	int last_exit;
 	t_shell *shell;
 } t_prompt;
@@ -111,8 +111,8 @@ typedef struct s_shell
 	bool exit;
 	int exit_status;
 	int pid;
-	int sigint;
-	int sigquit;
+	// int sigint;
+	// int sigquit;
 } t_shell;
 
 typedef struct s_lst_infile
@@ -125,7 +125,7 @@ typedef struct s_lst_infile
 typedef struct s_lst_outfile
 {
 	char *name;
-	bool append_mode;
+	int append_mode;
 	struct s_lst_outfile *next;
 } t_lst_outfile;
 

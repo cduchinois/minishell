@@ -6,11 +6,11 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 14:09:45 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/10 20:21:56 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/16 15:28:21 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 // initializing all variable of the minishell scope
 //envp is a constant to be able to modify it if required during the execution it is duplicated into not const char *
@@ -71,7 +71,7 @@ void init_shell(t_shell **shell, char **envp)
     (*shell)->exit = false;
     (*shell)->exit_status = 0;
     (*shell)->pid = 0;
-    (*shell)->sigquit = 0;
-    (*shell)->sigint = 0;
+//     (*shell)->sigquit = 0;
+//     (*shell)->sigint = 0;
 }
 

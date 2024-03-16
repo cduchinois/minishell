@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -33,7 +34,7 @@ void set_fd(t_prompt *prompt, int i)
 		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
 	while (outfile)
 	{
-		fd = open(outfile->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fd = open(outfile->name, outfile->append_mode, 0644);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		outfile = outfile->next;

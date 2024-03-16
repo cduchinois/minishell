@@ -19,8 +19,8 @@ void    print_shell(t_shell *shell)
     printf("exit = %d \n", shell->exit);
     printf("exit_status = %d \n",shell->exit_status);
     printf("pid = %d \n",shell->pid);
-    printf("sigquit = %d \n",shell->sigquit);
-    printf("sigint = %d \n",shell->sigint);
+    // printf("sigquit = %d \n",shell->sigquit);
+    // printf("sigint = %d \n",shell->sigint);
     printf("__________________________\n");
     if (shell->prompt) {
         print_prompt(shell->prompt);
