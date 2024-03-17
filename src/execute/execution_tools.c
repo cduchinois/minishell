@@ -1,19 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_tools.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/17 19:56:25 by fgranger          #+#    #+#             */
+/*   Updated: 2024/03/17 19:56:26 by fgranger         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
-char **rebuild_env(t_lst_env *env)
+char	**rebuild_env(t_lst_env *env)
 {
-	t_lst_env *tmp;
-	int len;
-	char **env_tab;
-	int i;
-	char *buffer;
-	tmp = env;
-	while (tmp)
-	{
-		len++;
-		tmp = tmp->next;
-	}
+	t_lst_env	*tmp;
+	int			len;
+	char		**env_tab;
+	int			i;
+	char		*buffer;
+
+	len = ft_env_len(env);
 	env_tab = malloc(sizeof(char **) * len + 1);
+	if (!env_tab)
+		return (NULL);
 	tmp = env;
 	i = 0;
 	while (tmp)
@@ -24,27 +34,32 @@ char **rebuild_env(t_lst_env *env)
 		tmp = tmp->next;
 		i++;
 	}
-	env_tab[i] = NULL;
-	return(env_tab);
+	env_tab[i] = 0;
+	return (env_tab);
 }
 
-void ft_exec_builtin(t_process *process)
+void	ft_exec_builtin(t_process *process)
 {
+	int	last_exit;
+
 	if (ft_strcmp(process->command, "echo") == 0)
-		process->prompt->last_exit = ft_echo(process->args);
+		last_exit = ft_echo(process->args);
 	else if (ft_strcmp(process->command, "pwd") == 0)
-		process->prompt->last_exit = ft_pwd();
+		last_exit = ft_pwd();
 	else if (ft_strcmp(process->command, "env") == 0)
-		process->prompt->last_exit = ft_env(process->shell->env, process->argc - 1);
+		last_exit = ft_env(process->shell->env, process->argc - 1);
 	else if (ft_strcmp(process->command, "export") == 0)
-		process->prompt->last_exit = ft_export(process);
+		last_exit = ft_export(process);
 	else if (ft_strcmp(process->command, "unset") == 0)
-		process->prompt->last_exit = ft_unset(process);
+		last_exit = ft_unset(process);
 	else if (ft_strcmp(process->command, "cd") == 0)
-		process->prompt->last_exit = ft_cd(process);
+		last_exit = ft_cd(process);
+	if (process->pid == 0)
+		exit(last_exit);
+	process->shell->exit_status = last_exit;
 }
 
-bool ft_is_builtin(char *cmd)
+bool	ft_is_builtin(char *cmd)
 {
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (true);
@@ -61,12 +76,12 @@ bool ft_is_builtin(char *cmd)
 	return (false);
 }
 
-void ft_exec_process(t_process *process)
+void	ft_exec_process(t_process *process)
 {
-	char *path;
-	char **env_tab;
+	char	*path;
+	char	**env_tab;
 
-    if (ft_is_builtin(process->command) == true)
+	if (ft_is_builtin(process->command) == true)
 		ft_exec_builtin(process);
 	else
 	{
@@ -75,5 +90,4 @@ void ft_exec_process(t_process *process)
 		execve(path, process->args, env_tab);
 		ft_freetab(env_tab);
 	}
-	
 }

@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 11:24:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 19:36:15 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/17 20:40:30 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,3 +119,4 @@ t_prompt	*prompt_init(char *line, char **tokens, t_shell *shell)
 		prompt->process[prompt->process_count - 1]->return_status;
 	return (prompt);
 }
+
