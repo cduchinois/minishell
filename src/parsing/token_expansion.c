@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:19:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 19:48:26 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/17 20:52:18 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*expand_variable(char *str, const char *token, int *i, t_shell *shell)
 	char	*new_str;
 
 	int (start) = *i + 1;
-	while (token[*i + 1] != ' ' && token[*i + 1] != '\t')
+	while (token[*i] && token[*i + 1] != ' ' && token[*i + 1] != '\t')
 		(*i)++;
 	if (*i == start)
 		return (str);

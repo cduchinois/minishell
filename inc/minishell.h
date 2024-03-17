@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 20:12:42 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/17 20:47:01 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void ft_exec_process(t_process *process);
 //redirection
 void	ft_set_pipes(t_prompt *prompt);
 void	set_fd(t_prompt *prompt, int i);
-
+	
 // Built-in functions 
 int ft_echo(char **args);
 int ft_pwd(void);
@@ -88,7 +88,7 @@ int ft_export(t_process *process);
 int ft_unset(t_process *process);
 int ft_exit(t_process *process);
 int ft_cd(t_process *process);
-
+	
 //safe functions
 void *safe_malloc(size_t size, t_shell *shell);
 void clean(t_shell *shell);
