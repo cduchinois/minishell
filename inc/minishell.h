@@ -42,13 +42,13 @@ void    mini_parser(t_shell *shell, char *line);
 void    parse_line(t_shell *shell, char *line);
 
 //parsing_________________________________________
-
 char **ft_strtoken(char *input, t_shell *shell); 
 char *extract_token(char *input, int *index, t_shell *shell);
 char *ft_expand_token(char *token, t_shell *shell);
 int find_start(char *input, int *index, bool *in_squote, bool *in_dquote);
 int find_end(char *input, int *index, bool *squote, bool *dquote);
 
+//files manipulation
 t_lst_infile *create_infile_node(const char *filename, bool here_doc, t_shell *shell);
 void append_infile_node(t_lst_infile **head, t_lst_infile *new_node);
 t_lst_outfile *create_outfile_node(const char *filename, int append_mode, t_shell *shell);
@@ -66,15 +66,10 @@ int ft_redirlen(char *s);
 void init_shell(t_shell **shell, char **envp);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
-char    *find_var_from_envp(t_lst_env *env, char *var_name);
-t_lst_env *env_new_node(char *key, const char *value, bool export_only, t_shell *shell);
-void env_append(t_lst_env **lst, t_lst_env *new_node);
 
 //signal_________________________________________
 void setup_signal_handlers();
 void setup_signal_handlers_non_empty_line();
-
-
 
 //Execution
 void	ft_execute(t_prompt *prompt);
@@ -94,6 +89,19 @@ int ft_cd(t_process *process);
 //safe functions
 void *safe_malloc(size_t size, t_shell *shell);
 void clean(t_shell *shell);
+
+
+//env manipulation functions
 void ft_free_env(t_lst_env *env);
+char    *find_var_from_envp(t_lst_env *env, char *var_name);
+t_lst_env *env_new_node(char *key, const char *value, bool export_only, t_shell *shell);
+void env_append(t_lst_env **lst, t_lst_env *new_node);
+char * ft_get_key(char *var);
+t_lst_env *var_exist(t_lst_env *env, char *var);
+int var_is_valid(char *var, int mode);
+t_lst_env *ft_env_dup(t_lst_env *env, t_shell *shell);
+int ft_print_sorted_env(t_lst_env *env, t_shell *shell);
+int export_var(t_process *process, char *var);
+char *get_pathname(t_lst_env *env, char *command);
 
 #endif

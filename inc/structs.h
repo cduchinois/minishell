@@ -31,7 +31,6 @@
 enum error
 {
 	QUOTES,
-	EMPTY,
 	OUTFILE,
 };
 

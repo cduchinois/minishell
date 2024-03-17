@@ -83,7 +83,8 @@ char *get_pathname(t_lst_env *env, char *command)
     char    *found_pathname = NULL;
 
     if (!command) return (NULL);
-
+    if (access(command, F_OK | X_OK) == 0)
+        return (command);
     path_env = find_path_from_envp(env, "PATH");
     if (!path_env || !(path_env->value))
     {
@@ -94,7 +95,6 @@ char *get_pathname(t_lst_env *env, char *command)
             return (NULL);
         }
     }
-
     path = ft_split(path_env->value, ':');
     if (!path) {
         free(command);
