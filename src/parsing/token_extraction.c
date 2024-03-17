@@ -100,7 +100,7 @@ char *extract_token(char *input, int *index, t_shell *shell)
     if (start < end) 
     {
         char *token = ft_strndup(input + start, end - start);
-        if (!(ft_strchr(token, '$') || was_in_single_quote))
+        if (!(ft_strchr(token, '$'))|| ((ft_strchr(token, '$')) && was_in_single_quote))
             return token;
         else 
         {

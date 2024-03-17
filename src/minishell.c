@@ -18,28 +18,29 @@
 void minishell(t_shell *shell) {
     char *line;
 
-    // Initialize with the default signal handlers
     setup_signal_handlers();
 
     while (!shell->exit) {
         line = readline("Minishell >");
-        
-        if (!line) {
-            if (rl_end == 0) { // Ctrl-D (EOF) on an empty prompt.
+        if (!line) 
+        {
+            if (rl_end == 0)
                 shell->exit = true;
-            } else {
-                continue; // Ignore Ctrl-D with input, effectively getting a new prompt.
-            }
-        } else {
-            // if (line && *line) {
+            else
+                continue;
+        }
+        else 
+        {
+            if (line && *line) 
+            {
                 setup_signal_handlers_non_empty_line();
-                add_history(line); // Add non-empty lines to history.
-                parse_line(shell, line); // Initialize prompt scope + process scope
-                ft_execute(shell->prompt); // Execute the parsed command
-            // } else {
-            //     // If line is effectively empty (only spaces, for instance), revert to default handling
+                add_history(line);
+                parse_line(shell, line);
+                ft_execute(shell->prompt);
+                if (shell->prompt)
+                    //free_prompt(shell->prompt);
                 setup_signal_handlers();
-            free(line); // Free the line
+            }
         }
     }
 }

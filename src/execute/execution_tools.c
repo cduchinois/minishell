@@ -75,4 +75,5 @@ void ft_exec_process(t_process *process)
 		execve(path, process->args, env_tab);
 		ft_freetab(env_tab);
 	}
+	
 }

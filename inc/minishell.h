@@ -89,6 +89,7 @@ int ft_cd(t_process *process);
 //safe functions
 void *safe_malloc(size_t size, t_shell *shell);
 void clean(t_shell *shell);
+void free_prompt(t_prompt *prompt);
 
 
 //env manipulation functions

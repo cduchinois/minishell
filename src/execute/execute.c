@@ -13,25 +13,54 @@
 
 #include "../inc/minishell.h"
 
+
+int	handle_here_doc(char *delimiter, int i)
+{
+	int		fd_infile;
+	char	*line;
+
+	fd_infile = open(".here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd_infile < 0)
+		return (-1);
+	while (1)
+	{
+		ft_putstr_fd("> ", 1);
+		line = get_next_line(0);
+		if (!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write(fd_infile, line, ft_strlen(line));
+		free(line);
+	}
+	close(fd_infile);
+	return (open(".here_doc", O_RDONLY));
+}
+
 void set_fd(t_prompt *prompt, int i)
 {
 	t_lst_infile *infile;
 	t_lst_outfile *outfile;
 	int fd;
+	int tmp_in;
 
 	infile = prompt->process[i]->infile;
-	if (i > 0)
-		dup2(prompt->process[i - 1]->fd[0], STDIN_FILENO);
+	tmp_in = dup(STDIN_FILENO);
 	while (infile)
 	{
-		fd = open(infile->name, O_RDONLY);
+		if (infile && infile->here_doc)
+		{	
+			dup2(tmp_in, STDIN_FILENO);
+			fd = handle_here_doc(infile->name, i);
+		}
+		else
+			fd = open(infile->name, O_RDONLY);
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 		infile = infile->next;
 	}
 	outfile = prompt->process[i]->outfile;
-	if (i < prompt->process_count - 1)
-		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
 	while (outfile)
 	{
 		fd = open(outfile->name, outfile->append_mode, 0644);
@@ -53,11 +82,14 @@ void ft_child(t_prompt *prompt, int i)
 		close(prompt->process[j]->fd[1]);
 		j++;
 	}
-	ft_exec_process(prompt->process[i]);
-	if (!ft_is_builtin(prompt->process[i]->command))
+	if (prompt->process[i]->command)
 	{
-		perror("exec_process");
-		exit(EXIT_FAILURE);
+		ft_exec_process(prompt->process[i]);
+		if (!ft_is_builtin(prompt->process[i]->command))
+		{
+			perror("exec_process");
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -87,11 +119,11 @@ void ft_execute(t_prompt *prompt) {
 	std_backup[0]= dup(STDIN_FILENO);
     std_backup[1]= dup(STDOUT_FILENO);
 
-    if (prompt->process_count == 1 && ft_strcmp(prompt->process[0]->command, "exit") == 0)
+    if (prompt->process_count == 1 && prompt->process[0]->command && ft_strcmp(prompt->process[0]->command, "exit") == 0)
         ft_exit(prompt->process[0]);
     for (i = 0; i < prompt->process_count; i++)
 	{
-        if (ft_is_builtin(prompt->process[i]->command) && i == prompt->process_count - 1)
+        if (prompt->process[i]->command && ft_is_builtin(prompt->process[i]->command) && i == prompt->process_count - 1)
             ft_child(prompt, i);
         else 
 		{
@@ -136,4 +168,5 @@ void ft_execute(t_prompt *prompt) {
     dup2(std_backup[1], STDOUT_FILENO);
     close(std_backup[0]);
     close(std_backup[1]);
+	unlink(".here_doc");
 }
