@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:22:37 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/16 17:50:00 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/17 20:05:58 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,29 @@
 		THe int delimiter array values are stated in enum delimiter
 */
 
-enum error
-{
-	QUOTES,
-	OUTFILE,
-};
-
-enum export_status
+enum	export_status
 {
 	UNVALID,
 	EMPTY,
 	VALID,
 };
 
-typedef struct s_prompt t_prompt;
-typedef struct s_shell t_shell;
-typedef struct s_lst_infile t_lst_infile;
-typedef struct s_lst_outfile t_lst_outfile;
-typedef struct s_lst_env t_lst_env;
+typedef	struct s_prompt t_prompt;
+typedef	struct s_shell t_shell;
+typedef	struct s_lst_infile t_lst_infile;
+typedef	struct s_lst_outfile t_lst_outfile;
+typedef	struct s_lst_env t_lst_env;
 
-typedef struct s_process
+typedef	struct s_process
 {
-	int index;
-	char *command;
-	char *pathname;
-	int argc;
-	char **args;
-	int *delimiters;
-	int fd[2];
-	int pid;
+	int		index;
+	char	*command;
+	char	*pathname;
+	int		argc;
+	char	**args;
+	int		*delimiters;
+	int		fd[2];
+	int		pid;
 	int return_status;
 	t_lst_infile *infile;
 	t_lst_outfile *outfile;
