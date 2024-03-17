@@ -108,5 +108,6 @@ t_prompt *prompt_init(char *line, char **tokens, t_shell *shell)
         i++;
     }
     prompt->last_exit = prompt->process[prompt->process_count - 1]->return_status;
+    prompt->shell = shell;
     return (prompt);
 }

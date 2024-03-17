@@ -37,9 +37,10 @@ void minishell(t_shell *shell) {
                 add_history(line);
                 parse_line(shell, line);
                 ft_execute(shell->prompt);
-                if (shell->prompt)
+                //if (shell->prompt)
                     //free_prompt(shell->prompt);
                 setup_signal_handlers();
+                free(line);
             }
         }
     }

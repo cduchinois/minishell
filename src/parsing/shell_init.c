@@ -65,7 +65,7 @@ t_lst_env *duplicate_environment(char **envp, t_shell *shell)
 void init_shell(t_shell **shell, char **envp)
 {
     *shell = safe_malloc(sizeof(t_shell), *shell);
-    (*shell)->env = duplicate_environment(envp, *shell);
+   (*shell)->env = duplicate_environment(envp, *shell);
     //if (!shell->env) = env dup failure or env -i
     (*shell)->prompt = NULL;
     (*shell)->exit = false;

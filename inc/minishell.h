@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/16 17:54:50 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/17 20:12:42 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ void	ft_execute(t_prompt *prompt);
 bool ft_is_builtin(char *cmd);
 void ft_exec_builtin(t_process *process);
 void ft_exec_process(t_process *process);
+//redirection
+void	ft_set_pipes(t_prompt *prompt);
+void	set_fd(t_prompt *prompt, int i);
 
 // Built-in functions 
 int ft_echo(char **args);
@@ -102,7 +105,7 @@ t_lst_env *var_exist(t_lst_env *env, char *var);
 int var_is_valid(char *var, int mode);
 t_lst_env *ft_env_dup(t_lst_env *env, t_shell *shell);
 int ft_print_sorted_env(t_lst_env *env, t_shell *shell);
-int export_var(t_process *process, char *var);
+int export_var(t_shell *shell, char *var);
 char *get_pathname(t_lst_env *env, char *command);
-
+int	ft_env_len(t_lst_env *env);
 #endif
