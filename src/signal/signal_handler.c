@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 12:19:07 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/16 17:32:49 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/23 19:41:14 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void handle_sigint(int sig) {
     // For Ctrl-C, simply print a new line and prompt in main loop; do minimal here.
     (void)sig; // Prevent unused variable warning.
     write(STDOUT_FILENO, "\n", 1); // Move to a new line.
+    g_signal = 130;
     rl_on_new_line();
     rl_replace_line("", 0); // Clear the line.
     rl_redisplay(); // Redisplay the prompt on a new line.
@@ -26,17 +27,21 @@ void handle_sigint(int sig) {
 void handle_sigint_interactive(int sig) {
     // For Ctrl-C, simply print a new line and prompt in main loop; do minimal here.
     (void)sig; // Prevent unused variable warning.
+    g_signal = 130;
     write(STDOUT_FILENO, "\n", 1); // Move to a new line.
     rl_on_new_line();
     rl_replace_line("", 0); // Clear the line.
     // rl_redisplay(); // Redisplay the prompt on a new line.
-}
 
+}
 
 void handle_sigquit(int sig) {
     (void)sig;
+    g_signal = 131;
     printf("\nQuit\n");
-    exit(EXIT_SUCCESS); 
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    //exit(EXIT_SUCCESS); 
 }
 
 // Handles setup for when the input line is empty

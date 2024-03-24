@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:19:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 20:52:18 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/23 18:20:58 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_expand_value(char *var_name, t_shell *shell)
 
 	if (ft_strcmp(var_name, "?") == 0)
 	{
-		value = ft_itoa(shell->exit_status);
+		value = ft_itoa(g_signal);
 		return (value);
 	}
 	else

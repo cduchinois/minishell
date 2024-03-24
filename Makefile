@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+         #
+#    By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 15:50:42 by yuewang           #+#    #+#              #
-#    Updated: 2024/03/16 12:26:37 by yuewang          ###   ########.fr        #
+#    Updated: 2024/03/24 18:56:14 by fgranger         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME	  = minishell
 CC		  = cc -g #-fsanitize=address
-CFLAG	  = -Wall -Wextra -Werror #-v
+CFLAG	  = -Wall -Wextra -Werror #-v 
 LDFLAGS   = -L/opt/homebrew/opt/readline/lib -lreadline
 CPPFLAGS  = -I inc/ -I src/libft/ -I/opt/homebrew/opt/readline/include
 INC_LIBFT = -I src/libft/

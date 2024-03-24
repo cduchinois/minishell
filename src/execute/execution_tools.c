@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:25 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/17 19:56:26 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:38:16 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**rebuild_env(t_lst_env *env)
 	char		*buffer;
 
 	len = ft_env_len(env);
-	env_tab = malloc(sizeof(char **) * len + 1);
+	env_tab = malloc(sizeof(char *) * len + 1);
 	if (!env_tab)
 		return (NULL);
 	tmp = env;
@@ -34,7 +34,7 @@ char	**rebuild_env(t_lst_env *env)
 		tmp = tmp->next;
 		i++;
 	}
-	env_tab[i] = 0;
+	env_tab[i -1] = NULL;
 	return (env_tab);
 }
 
@@ -56,7 +56,7 @@ void	ft_exec_builtin(t_process *process)
 		last_exit = ft_cd(process);
 	if (process->pid == 0)
 		exit(last_exit);
-	process->shell->exit_status = last_exit;
+	g_signal = last_exit;
 }
 
 bool	ft_is_builtin(char *cmd)
@@ -81,7 +81,7 @@ void	ft_exec_process(t_process *process)
 	char	*path;
 	char	**env_tab;
 
-	if (ft_is_builtin(process->command) == true)
+	if (ft_is_builtin(process->command))
 		ft_exec_builtin(process);
 	else
 	{
@@ -89,5 +89,6 @@ void	ft_exec_process(t_process *process)
 		path = get_pathname(process->shell->env, process->command);
 		execve(path, process->args, env_tab);
 		ft_freetab(env_tab);
+		exec_error(process->args[0], strerror(errno), errno, process->pid);
 	}
 }

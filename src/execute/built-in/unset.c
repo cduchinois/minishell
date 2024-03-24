@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:21 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/17 19:56:22 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/23 19:56:34 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,13 @@ int	unset_vars(t_process *process)
 		error += unset_var(process, process->args[i]);
 		i++;
 	}
-	if (error == true)
-		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
 int	ft_unset(t_process *process)
 {
 	if (process->argc == 1)
-		return (ft_printf("unset: not enough arguments\n"), EXIT_FAILURE);
+		return (EXIT_SUCCESS);
 	else
 		return (unset_vars(process));
 	return (EXIT_SUCCESS);

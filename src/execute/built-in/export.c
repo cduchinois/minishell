@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:55:30 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/17 19:55:33 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:07:20 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ int	export_var(t_shell *shell, char *var)
 
 int	export_vars(t_process *process)
 {
-	int		i;
-	bool	error;
+	int	i;
+	int	error;
 
 	i = 1;
-	error = false;
+	error = 0;
 	while (process->args[i])
 	{
 		error += export_var(process->shell, process->args[i]);

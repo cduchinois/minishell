@@ -6,36 +6,21 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:57:42 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/17 20:29:17 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:40:05 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	ft_set_pipes(t_prompt *prompt)
-{
-	int	i;
-
-	i = 0;
-	while (i < prompt->process_count)
-	{
-		if (pipe(prompt->process[i]->fd) == -1)
-		{
-			perror("pipe");
-			exit(EXIT_FAILURE);
-		}
-		i++;
-	}
-}
-
-static int	handle_here_doc(char *delimiter, int i)
+static int	handle_here_doc(char *delimiter, int i, t_prompt *prompt)
 {
 	int		fd_infile;
 	char	*line;
 
 	fd_infile = open(".here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_infile < 0)
-		return (-1);
+		return (exec_error(".here_doc", strerror(errno),
+				errno, prompt->process[i]->pid), -1);
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
@@ -52,44 +37,66 @@ static int	handle_here_doc(char *delimiter, int i)
 	return (open(".here_doc", O_RDONLY));
 }
 
-void set_infile(t_lst_infile *infile, const int *tmp_in, int i)
+static	int	set_infile(t_lst_infile *infile, int i, t_prompt *prompt)
 {
-    int fd;
-    
-    if (infile && infile->here_doc)
-    {	
-        dup2(*tmp_in, STDIN_FILENO);
-        fd = handle_here_doc(infile->name, i);
-    }
-    else
-        fd = open(infile->name, O_RDONLY);
-    if (fd == -1)
-        exit(2);
-    dup2(fd, STDIN_FILENO);
-    close(fd);
+	int	fd;
+	int	tmp_in;
+
+	tmp_in = dup(STDIN_FILENO);
+	if (infile && infile->here_doc)
+	{	
+		dup2(tmp_in, STDIN_FILENO);
+		fd = handle_here_doc(infile->name, i, prompt);
+	}
+	else
+		fd = open(infile->name, O_RDONLY);
+	close(tmp_in);
+	if (fd == -1)
+		return (exec_error(infile->name, strerror(errno),
+				errno, prompt->process[i]->pid));
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (EXIT_SUCCESS);
 }
 
-void	set_fd(t_prompt *prompt, int i)
+void	ft_set_pipes(t_prompt *prompt, int i)
+{
+	if (i != 0)
+	{
+		dup2(prompt->last_pipe_fd, STDIN_FILENO);
+		close(prompt->process[i - 1]->fd[0]);
+		close(prompt->last_pipe_fd);
+	}
+	if (i != prompt->process_count - 1)
+	{
+		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
+		close(prompt->process[i]->fd[1]);
+	}
+}
+
+int	ft_set_files(t_prompt *prompt, int i)
 {
 	int					fd;
-	t_lst_infile	*infile;
-	t_lst_outfile	*outfile;
-	const int			tmp_in = dup(STDIN_FILENO);
-    
-    infile = prompt->process[i]->infile;
+	t_lst_infile		*infile;
+	t_lst_outfile		*outfile;
+
+	infile = prompt->process[i]->infile;
 	while (infile)
 	{
-        set_infile(infile, &tmp_in, i);
+		if (set_infile(infile, i, prompt))
+			return (errno);
 		infile = infile->next;
 	}
-    outfile = prompt->process[i]->outfile;
+	outfile = prompt->process[i]->outfile;
 	while (outfile)
 	{
 		fd = open(outfile->name, outfile->append_mode, 0644);
-        if (fd == -1)
-            exit(EXIT_FAILURE);
+		if (fd == -1)
+			return (exec_error(outfile->name, strerror(errno),
+					errno, prompt->process[i]->pid));
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 		outfile = outfile->next;
 	}
+	return (EXIT_SUCCESS);
 }

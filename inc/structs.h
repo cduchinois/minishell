@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:22:37 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 20:05:58 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/23 17:53:40 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ typedef struct s_prompt
 	char **tokens;
 	t_process **process;
 	int process_count;
-	// bool here_doc;
-	// bool append_mode;
 	int last_exit;
+	int backup_fd[2];
+	int last_pipe_fd;
 	t_shell *shell;
 } t_prompt;
 
@@ -106,8 +106,6 @@ typedef struct s_shell
 	int exit_status;
 	int pid;
 	int error;
-	// int sigint;
-	// int sigquit;
 } t_shell;
 
 typedef struct s_lst_infile

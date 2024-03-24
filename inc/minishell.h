@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 20:47:01 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/24 19:42:41 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,15 @@
 # include <stdbool.h>
 # include <signal.h>
 
+
+
 //PATH_MAX define value to be checked for linux the define on mac is 1024 and 260 on PC 
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
 # endif
-
 //To delete only for debuggin purposes
+extern int		g_signal;
 void    print_process(t_process *process);
 void    print_prompt(t_prompt *prompt);
 void    print_shell(t_shell *shell);
@@ -72,13 +74,14 @@ void setup_signal_handlers();
 void setup_signal_handlers_non_empty_line();
 
 //Execution
-void	ft_execute(t_prompt *prompt);
+int	ft_execute(t_prompt *prompt);
 bool ft_is_builtin(char *cmd);
 void ft_exec_builtin(t_process *process);
 void ft_exec_process(t_process *process);
+
 //redirection
-void	ft_set_pipes(t_prompt *prompt);
-void	set_fd(t_prompt *prompt, int i);
+void	ft_set_pipes(t_prompt *prompt, int i);
+int     ft_set_files(t_prompt *prompt, int i);
 	
 // Built-in functions 
 int ft_echo(char **args);
@@ -94,7 +97,6 @@ void *safe_malloc(size_t size, t_shell *shell);
 void clean(t_shell *shell);
 void free_prompt(t_prompt *prompt);
 
-
 //env manipulation functions
 void ft_free_env(t_lst_env *env);
 char    *find_var_from_envp(t_lst_env *env, char *var_name);
@@ -108,4 +110,7 @@ int ft_print_sorted_env(t_lst_env *env, t_shell *shell);
 int export_var(t_shell *shell, char *var);
 char *get_pathname(t_lst_env *env, char *command);
 int	ft_env_len(t_lst_env *env);
+
+//error
+int    exec_error(char *cmd, char *msg, int error, int ex);
 #endif
