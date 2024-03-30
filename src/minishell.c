@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:09:41 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/23 17:11:07 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:50:22 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void minishell(t_shell *shell)
 			setup_signal_handlers_non_empty_line();
 			add_history(line);
 			parse_line(shell, line);
+            // print_prompt(shell->prompt);
 			if (shell->prompt)
 				ft_execute(shell->prompt);
 				// free_prompt(shell->prompt);

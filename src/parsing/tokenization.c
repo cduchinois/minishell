@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 21:00:39 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 19:50:56 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/30 17:53:13 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_isredir(char *s)
 	{
 		return (0);
 	}
-	return (s[0] == '>' || s[0] == '<');
+	return (ft_strcmp(s, ">") == 0 || ft_strcmp(s, "<") == 0|| ft_strcmp(s, ">>") == 0 || ft_strcmp(s, "<<") == 0);
 }
 
 int	ft_redirlen(char *s)
@@ -58,7 +58,7 @@ int	file_check(char **tokens)
 	i = 0;
 	while (tokens[i])
 	{
-		if (ft_isredir(tokens[i]) == !0)
+		if (ft_isredir(tokens[i]) == 1)
 		{
 			if (!tokens[i + 1] || ft_strcmp(tokens[i + 1], "|") == 0)
 			{
@@ -88,7 +88,7 @@ char	**ft_strtoken(char *input, t_shell *shell)
 	{
 		tokens[k] = extract_token(input, &i, shell);
 		if (tokens[k])
-			k++;
+            k++;
 	}
 	tokens[k] = NULL;
 	if (file_check(tokens) < 0)

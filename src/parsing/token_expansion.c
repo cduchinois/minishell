@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:19:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/23 18:20:58 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:48:08 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 char	*get_expand_value(char *var_name, t_shell *shell)
 {
-	char	*value;
 
+	char	*value;
+    // if (var_name == NULL)
+    //     return ("$");
 	if (ft_strcmp(var_name, "?") == 0)
 	{
 		value = ft_itoa(g_signal);
 		return (value);
-	}
+	} 
 	else
 	{
 		value = find_var_from_envp(shell->env, var_name);
@@ -52,12 +54,15 @@ char	*expand_variable(char *str, const char *token, int *i, t_shell *shell)
 	char	*new_str;
 
 	int (start) = *i + 1;
-	while (token[*i] && token[*i + 1] != ' ' && token[*i + 1] != '\t')
+	while (token[*i] && token[*i + 1] != ' ' && token[*i + 1] != '\t' && token[*i] != '?')
 		(*i)++;
-	if (*i == start)
+	if (*i < start)
 		return (str);
 	var_name = ft_strndup(token + start, *i - start + 1);
+
+            // printf("var_name:%s\n", var_name);
 	value = get_expand_value(var_name, shell);
+
 	if (value)
 	{
 		new_str = ft_strjoin(str, value);
@@ -97,14 +102,18 @@ char	*ft_expand_token(char *token, t_shell *shell)
 	{
 		if (token[i] == '\'')
 			expanded_token = handle_quotes(expanded_token, token, &i);
-		else if (token[i] == '$' && token[i + 1] != ' ' \
-				&& token[i + 1] != '\t' && token[i + 1] != '\0')
-			expanded_token = expand_variable(expanded_token, token, &i, shell);
+		else if (token[i] == '$' && (token[i + 1] != ' ' \
+				&& token[i + 1] != '\t' && token[i + 1] != '\0'))
+        {    
+            expanded_token = expand_variable(expanded_token, token, &i, shell);
+            i++;
+        }
 		else
 		{
 			expanded_token = append_char(expanded_token, token[i]);
 			i++;
 		}
 	}
+    free (token);
 	return (expanded_token);
 }	
