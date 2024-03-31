@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:25 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/24 19:38:16 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/31 18:23:36 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ void	ft_exec_process(t_process *process)
 	{
 		env_tab = rebuild_env(process->shell->env);
 		path = get_pathname(process->shell->env, process->command);
-		execve(path, process->args, env_tab);
+		if (path == NULL)
+			execve(process->command, process->args, env_tab);
+		else 
+			execve(path, process->args, env_tab);
 		ft_freetab(env_tab);
 		exec_error(process->args[0], strerror(errno), errno, process->pid);
 	}

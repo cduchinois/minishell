@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:58:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/24 19:42:27 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:53:26 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ void	ft_fork(t_prompt *prompt, int i)
 	else
 	{
 		if (prompt->last_pipe_fd != -1)
+		{
 			close(prompt->last_pipe_fd);
+		}
 		prompt->last_pipe_fd = prompt->process[i]->fd[0];
 		close(prompt->process[i]->fd[1]);
 	}
@@ -62,10 +64,19 @@ void	ft_fork(t_prompt *prompt, int i)
 
 void	ft_clear_fd(t_prompt *prompt)
 {
-	dup2(prompt->backup_fd[0], STDIN_FILENO);
-	dup2(prompt->backup_fd[1], STDOUT_FILENO);
-	close(prompt->backup_fd[0]);
-	close(prompt->backup_fd[1]);
+	int i;
+
+	i = 0;
+	while (i < prompt->process_count)
+	{
+		if (prompt->process[i]->fd[0] > -1)
+			close(prompt->process[i]->fd[0]);
+		if (prompt->process[i]->fd[1] > -1)
+			close(prompt->process[i]->fd[1]);
+		i++;
+	}
+	dup2(1, STDIN_FILENO);
+	dup2(0, STDOUT_FILENO);
 	unlink(".here_doc");
 }
 
@@ -76,8 +87,6 @@ int	ft_execute(t_prompt *prompt)
 
 	i = -1;
 	prompt->last_pipe_fd = -1;
-	prompt->backup_fd[0] = dup(STDIN_FILENO);
-	prompt->backup_fd[1] = dup(STDOUT_FILENO);
 	if (prompt->process_count == 1 && prompt->process[0]->command
 		&& ft_strcmp(prompt->process[0]->command, "exit") == 0)
 		return (ft_exit(prompt->process[0]), EXIT_FAILURE);

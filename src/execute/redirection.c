@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:57:42 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/24 19:40:05 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/03/31 19:50:45 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	ft_set_pipes(t_prompt *prompt, int i)
 		dup2(prompt->process[i]->fd[1], STDOUT_FILENO);
 		close(prompt->process[i]->fd[1]);
 	}
+	close(prompt->process[i]->fd[0]);
 }
 
 int	ft_set_files(t_prompt *prompt, int i)
