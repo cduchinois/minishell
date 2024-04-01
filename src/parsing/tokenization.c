@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 21:00:39 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/30 17:53:13 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 14:22:24 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,40 @@ int	file_check(char **tokens)
 	return (0);
 }
 
-char	**ft_strtoken(char *input, t_shell *shell)
+t_list *ft_strtoken(char *input, t_shell *shell)
 {
-	char	**tokens;
+    int i = 0;
+    t_list *token = NULL; // Start with an empty list
+    t_list *last = NULL;
 
-	int (i) = 0;
-	int (k) = 0;
-	int (token_count) = count_tokens(input);
-	if (token_count < 0)
-	{
-		printf("Syntax error: Incomplete quote\n");
-		return (NULL);
-	}
-	tokens = safe_malloc((token_count + 1) * sizeof(char *), shell);
-	while (input[i])
-	{
-		tokens[k] = extract_token(input, &i, shell);
-		if (tokens[k])
-            k++;
-	}
-	tokens[k] = NULL;
-	if (file_check(tokens) < 0)
-	{
-		ft_freetab(tokens);
-		return (NULL);
-	}
-	return (tokens);
+    int token_count = count_tokens(input);
+    if (token_count < 0)
+    {
+        printf("Syntax error: Incomplete quote\n");
+        return NULL;
+    }
+    while (input[i]) {
+        t_list *new = extract_token(input, &i, shell);
+        if (new == NULL || new->content == NULL)
+            continue;
+        if (token == NULL)
+        {
+            token = new;
+            last = new; // Initialize last here
+        } 
+        else 
+        {
+            last->next = new; // Append to the end of the list
+            last = new; // Advance last to the new node
+            while (last->next)
+                last = last->next;
+        }
+        if(input[i])
+            i++;
+    }
+    // if (file_check(tokens) < 0) {
+    //     ft_freetab(tokens);
+    //     return NULL;
+    // }
+    return token;
 }

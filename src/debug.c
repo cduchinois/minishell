@@ -33,15 +33,14 @@ void    print_prompt(t_prompt *prompt)
 {
     printf("_____PROMPT_____\n");
     printf(" USER INPUT : %s \n ", prompt->user_input);
-    int i = 0;
-    while (prompt->tokens[i])
+    while (prompt->token)
     {
-        printf("token %d : %s --- ", i, prompt->tokens[i]);
-        i++;
+        printf("token %s\n ", prompt->token->content);
+        prompt->token = prompt->token->next;
     }
     printf("\nPROCESS COUNT : %d\n", prompt->process_count);
     printf("last_exit: %d\n", prompt->last_exit);
-    i = 0;
+    int i = 0;
     while (i < prompt->process_count)
     {
         print_process(prompt->process[i]);

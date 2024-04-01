@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 06:39:08 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 17:57:44 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 12:32:20 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ void free_prompt(t_prompt *prompt)
     {
         if (prompt->user_input)
             free(prompt->user_input);
-        if (prompt->tokens)
-            ft_freetab(prompt->tokens);
+        //freetokenlist
         int i = 0;
         while (i < prompt->process_count)
         {

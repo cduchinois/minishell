@@ -6,13 +6,14 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/30 17:50:00 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 12:38:12 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "structs.h" 
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -44,11 +45,14 @@ void    mini_parser(t_shell *shell, char *line);
 void    parse_line(t_shell *shell, char *line);
 
 //parsing_________________________________________
-char **ft_strtoken(char *input, t_shell *shell); 
-char *extract_token(char *input, int *index, t_shell *shell);
+t_list *ft_strtoken(char *input, t_shell *shell);
+t_list *extract_token(char *input, int *index, t_shell *shell);
 char *ft_expand_token(char *token, t_shell *shell);
+t_list *handle_wildcard(char *token_str, t_shell *shell);
 int find_start(char *input, int *index, bool *in_squote, bool *in_dquote);
 int find_end(char *input, int *index, bool *squote, bool *dquote);
+void trim_quote(char **token);
+char	*handle_quotes(char *str, const char *token, int *i);
 
 //files manipulation
 t_lst_infile *create_infile_node(const char *filename, bool here_doc, t_shell *shell);
@@ -56,12 +60,13 @@ void append_infile_node(t_lst_infile **head, t_lst_infile *new_node);
 t_lst_outfile *create_outfile_node(const char *filename, int append_mode, t_shell *shell);
 void append_outfile_node(t_lst_outfile **head, t_lst_outfile *new_node);
 
-int count_pipes(char **tokens);
 char **extract_arguments(char **tokens, int argc, t_shell *shell);
 
-t_prompt *prompt_init(char *line, char **tokens, t_shell *shell);
+t_prompt *prompt_init(char *line, t_list *token, t_shell *shell);
 
 int ft_isredir(char *s);
+int	ft_isquote(char s);
+
 int ft_redirlen(char *s);
 
 

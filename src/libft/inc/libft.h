@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 16:42:23 by yuewang           #+#    #+#             */
-/*   Updated: 2024/01/25 17:30:19 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 12:42:34 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int		ft_strcmp(char *s1, char *s2);
 
 typedef struct s_list
 {
-	void			*content;
+	char			*content;
 	struct s_list	*next;
 }	t_list;
 t_list	*ft_lstnew(void *content);
