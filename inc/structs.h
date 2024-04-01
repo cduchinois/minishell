@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:22:37 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/23 17:53:40 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/01 12:29:19 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 #define STRUCTS_H
+# include "../src/libft/inc/libft.h"
 
 #include <stdbool.h>
 
@@ -76,7 +77,7 @@ typedef	struct s_process
 typedef struct s_prompt
 {
 	char *user_input;
-	char **tokens;
+	t_list *token;
 	t_process **process;
 	int process_count;
 	int last_exit;

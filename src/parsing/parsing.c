@@ -6,27 +6,13 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 12:36:13 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 18:34:35 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 13:54:17 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	count_pipes(char **tokens)
-{
-	int	pipe_count;
-	int	i;
 
-	pipe_count = 0;
-	i = 0;
-	while (tokens[i])
-	{
-		if (strcmp(tokens[i], "|") == 0)
-			pipe_count++;
-		i++;
-	}
-	return (pipe_count);
-}
 
 char	**extract_arguments(char **tokens, int argc, t_shell *shell)
 {
@@ -59,14 +45,19 @@ char	**extract_arguments(char **tokens, int argc, t_shell *shell)
 void	parse_line(t_shell *shell, char *line)
 {
 	char	*input;
-	char	**tokens;
+	t_list	*token;
 
 	input = ft_strdup(line);
-	tokens = ft_strtoken(input, shell);
-	if (!tokens)
+	token = ft_strtoken(input, shell);
+    // while (token)
+    // {
+    //     printf("token:%s\n", token->content);
+    //     token = token->next;
+    // }
+	if (!token)
 	{
 		free(input);
 		return ;
 	}
-	shell->prompt = prompt_init(line, tokens, shell);
+	shell->prompt = prompt_init(line, token, shell);
 }

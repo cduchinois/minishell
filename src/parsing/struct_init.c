@@ -6,117 +6,122 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 11:24:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 20:40:30 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 15:13:35 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-t_lst_infile	*infile_list_init(char **tokens, int token_count, \
-				t_process *process, t_shell *shell)
-{
-	t_lst_infile	*new_node;
-	bool			is_heredoc;
+t_lst_infile *infile_list_init(t_list *tokens, t_process *process, t_shell *shell) {
+    t_lst_infile *head = NULL;
+    bool is_heredoc = false;
+    t_list *current = tokens;
 
-	int (i) = 0;
-	t_lst_infile (*head) = NULL;
-	while (i < token_count)
-	{
-		if ((ft_strcmp(tokens[i], "<") == 0 || ft_strcmp(tokens[i], "<<") == 0))
-		{
-			is_heredoc = false;
-			if (ft_strcmp(tokens[i], "<<") == 0)
-				is_heredoc = true;
-			new_node = create_infile_node(tokens[i + 1], is_heredoc, shell);
-			if (new_node)
-				append_infile_node(&head, new_node);
-			i += 2;
-			process->argc -= 2;
-		}
-		else
-			i++;
-	}
-	return (head);
+    while (current && current->next) { // Ensure there's a token and a next token
+        if (strcmp(current->content, "<") == 0 || strcmp(current->content, "<<") == 0) {
+            is_heredoc = strcmp(current->content, "<<") == 0;
+            t_lst_infile *new_node = create_infile_node(current->next->content, is_heredoc, shell);
+            if (new_node) {
+                append_infile_node(&head, new_node);
+            }
+            current = current->next->next; // Move past the redirection token and its file
+            process->argc -= 2; // Adjust argument count for each redirection found
+        } else {
+            current = current->next; // Move to the next token if not a redirection
+        }
+    }
+    return head;
 }
 
-t_lst_outfile	*outfile_list_init(char **tokens, int token_count, \
-				t_process *process, t_shell *shell)
-{
-	t_lst_outfile	*new_node;
-	int				append_mode;
+t_lst_outfile *outfile_list_init(t_list *tokens, t_process *process, t_shell *shell) {
+    t_lst_outfile *head = NULL;
+    int append_mode = O_WRONLY | O_CREAT | O_TRUNC; // Default to overwrite
+    t_list *current = tokens;
 
-	int (i) = 0;
-	t_lst_outfile (*head) = NULL;
-	while (i < token_count)
-	{
-		if ((ft_strcmp(tokens[i], ">") == 0 || ft_strcmp(tokens[i], ">>") == 0) \
-			&& i + 1 < token_count)
-		{
-			append_mode = O_WRONLY | O_CREAT | O_TRUNC;
-			if (ft_strcmp(tokens[i], ">>") == 0)
-				append_mode = O_WRONLY | O_CREAT | O_APPEND;
-			new_node = create_outfile_node(tokens[i + 1], append_mode, shell);
-			if (new_node)
-				append_outfile_node(&head, new_node);
-			i += 2;
-			process->argc -= 2;
-		}
-		else
-			i++;
-	}
-	return (head);
+    while (current && current->next) { // Ensure there's a token and a next token
+        if (strcmp(current->content, ">") == 0 || strcmp(current->content, ">>") == 0) {
+            append_mode = strcmp(current->content, ">>") == 0 ? O_WRONLY | O_CREAT | O_APPEND : O_WRONLY | O_CREAT | O_TRUNC;
+            t_lst_outfile *new_node = create_outfile_node(current->next->content, append_mode, shell);
+            if (new_node) {
+                append_outfile_node(&head, new_node);
+            }
+            current = current->next->next; // Move past the redirection token and its file
+            process->argc -= 2; // Adjust argument count for each redirection found
+        } else {
+            current = current->next; // Move to the next token if not a redirection
+        }
+    }
+    return head;
 }
 
-t_process	*process_init(char **tokens, int token_count, \
-			int index, t_prompt *prompt)
+int count_pipes(t_list *tokens) 
 {
-	t_process	*process;
+    int pipe_count = 0;
+    while (tokens != NULL) {
+        if (strcmp(tokens->content, "|") == 0) {
+            pipe_count++;
+        }
+        tokens = tokens->next;
+    }
+    return pipe_count;
+}
 
-	process = safe_malloc(sizeof(t_process), prompt->shell);
-	process->index = index;
-	process->argc = token_count;
-	process->infile = infile_list_init(tokens, token_count, \
+t_process *process_init(t_list *token, int token_count, int index, t_prompt *prompt)
+{
+    t_process *process = safe_malloc(sizeof(t_process), prompt->shell);
+    	process->index = index;
+    process->argc = token_count;
+    process->infile = infile_list_init(token, \
 					process, prompt->shell);
-	process->outfile = outfile_list_init(tokens, token_count, \
+	process->outfile = outfile_list_init(token, \
 					process, prompt->shell);
-	process->args = extract_arguments(tokens, process->argc, prompt->shell);
-	if (process->args && process->args[0])
-		process->command = ft_strdup(process->args[0]);
-	process->fd[0] = -1;
+    process->args = safe_malloc((token_count + 1) * sizeof(char *), prompt->shell);
+    t_list *current_token = token;
+    for (int i = 0; i < token_count; i++, token = token->next)
+    {
+        process->args[i] = strdup(token->content);
+    }
+    process->args[token_count] = NULL;
+    if (process->args && process->args[0])
+        process->command = strdup(process->args[0]);
+    process->fd[0] = -1;
 	process->fd[1] = -1;
-	process->pid = -1;
-	process->return_status = 0;
-	process->prompt = prompt;
-	process->shell = prompt->shell;
-	return (process);
+    process->pid = -1;
+    process->return_status = 0;
+    process->prompt = prompt;
+    process->shell = prompt->shell;
+    return process;
 }
 
-t_prompt	*prompt_init(char *line, char **tokens, t_shell *shell)
-{
-	t_prompt	*prompt;
-	int			end;
+t_prompt *prompt_init(char *line, t_list *token, t_shell *shell) {
+    t_prompt *prompt = safe_malloc(sizeof(t_prompt), shell);
+    prompt->user_input = line;
+    prompt->token = token;
+    prompt->process_count = count_pipes(token) + 1;
+    prompt->process = safe_malloc(prompt->process_count * sizeof(t_process *), shell);
+    prompt->shell = shell;
+    t_list *current = token;
+    int process_index = 0;
+    int token_count = 0;
+    t_list *start = token; // Initialize start at the beginning of the token list
 
-	int (i) = 0;
-	int (start) = 0;
-	prompt = safe_malloc(sizeof(t_prompt), shell);
-	prompt->user_input = line;
-	prompt->tokens = tokens;
-	prompt->process_count = count_pipes(tokens) + 1;
-	prompt->process = safe_malloc(prompt->process_count * \
-					sizeof(t_process *), shell);
-	prompt->shell = shell;
-	while (i < prompt->process_count)
-	{
-		end = start;
-		while (tokens[end] && strcmp(tokens[end], "|") != 0)
-			end++;
-		prompt->process[i] = process_init(&tokens[start], \
-							end - start, i, prompt);
-		start = end + 1;
-		i++;
-	}
-	prompt->last_exit = \
-		prompt->process[prompt->process_count - 1]->return_status;
-	return (prompt);
+    while (current) {
+        if (strcmp(current->content, "|") == 0 || !current->next) {
+            // Include the current token if it's not a pipe
+            int actual_token_count = strcmp(current->content, "|") == 0 ? token_count : token_count + 1;
+            prompt->process[process_index] = process_init(start, actual_token_count, process_index, prompt);
+            process_index++;
+            token_count = 0; // Reset token count for the next process
+            if (current->next) start = current->next; // Set start to the next token after the pipe
+        } else {
+            token_count++;
+        }
+        current = current->next;
+    }
+    if (prompt->process_count > 0 && prompt->process[prompt->process_count - 1]) {
+        prompt->last_exit = prompt->process[prompt->process_count - 1]->return_status;
+    } else {
+        prompt->last_exit = -1;
+    }
+    return prompt;
 }
-

@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:19:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/30 17:48:08 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/03/31 18:07:02 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ char	*get_expand_value(char *var_name, t_shell *shell)
 {
 
 	char	*value;
-    // if (var_name == NULL)
-    //     return ("$");
 	if (ft_strcmp(var_name, "?") == 0)
 	{
 		value = ft_itoa(g_signal);
@@ -59,8 +57,6 @@ char	*expand_variable(char *str, const char *token, int *i, t_shell *shell)
 	if (*i < start)
 		return (str);
 	var_name = ft_strndup(token + start, *i - start + 1);
-
-            // printf("var_name:%s\n", var_name);
 	value = get_expand_value(var_name, shell);
 
 	if (value)
@@ -73,23 +69,7 @@ char	*expand_variable(char *str, const char *token, int *i, t_shell *shell)
 	return (str);
 }
 
-char	*handle_quotes(char *str, const char *token, int *i)
-{
-	int		len;
-	char	*new_str;
-	char	*temp;
 
-	int (start) = (*i)++;
-	while (token[*i] && token[*i] != '\'')
-		(*i)++;
-	len = *i - start + 1;
-	temp = ft_strndup(token + start, len + 1);
-	new_str = ft_strjoin(str, temp);
-	free(str);
-	free(temp);
-	(*i)++;
-	return (new_str);
-}
 
 char	*ft_expand_token(char *token, t_shell *shell)
 {

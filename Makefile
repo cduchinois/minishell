@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+         #
+#    By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/22 15:50:42 by yuewang           #+#    #+#              #
-#    Updated: 2024/03/24 18:56:14 by fgranger         ###   ########.fr        #
+#    Updated: 2024/04/01 12:26:09 by yuewang          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@
 NAME	  = minishell
 CC		  = cc -g #-fsanitize=address
 CFLAG	  = -Wall -Wextra -Werror #-v 
-LDFLAGS   = -L/opt/homebrew/opt/readline/lib -lreadline
-CPPFLAGS  = -I inc/ -I src/libft/ -I/opt/homebrew/opt/readline/include
+LDFLAGS   = -lreadline
+CPPFLAGS  = -I inc/ -I src/libft/ -I/usr/include/readline
 INC_LIBFT = -I src/libft/
 INC		  = -I inc/
 RM		  = rm -f
@@ -40,7 +40,7 @@ $(LIBFT) :
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME) : $(OBJ) $(LIBFT)
-	$(CC) $(OBJ) -o $(NAME) $(LIBFT) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS) $(LIBFT)
 
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	@mkdir -p $(@D)
