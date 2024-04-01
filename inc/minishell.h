@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 12:38:12 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 17:09:30 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int ft_redirlen(char *s);
 void init_shell(t_shell **shell, char **envp);
 void ft_fd_in(int i, t_process **processes);
 void ft_fd_out(int i, t_process **processes, int process_count);
+void	ft_clear_fd(t_prompt *prompt, int sub);
 
 //signal_________________________________________
 void setup_signal_handlers();
@@ -117,5 +118,5 @@ char *get_pathname(t_lst_env *env, char *command);
 int	ft_env_len(t_lst_env *env);
 
 //error
-int    exec_error(char *cmd, char *msg, int error, int ex);
+int    exec_error(char *cmd, char *msg, int error, int ex, t_shell *shell);
 #endif

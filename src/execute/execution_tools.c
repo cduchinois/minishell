@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:25 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/31 18:23:36 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:14:45 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,11 @@ void	ft_exec_builtin(t_process *process)
 	else if (ft_strcmp(process->command, "cd") == 0)
 		last_exit = ft_cd(process);
 	if (process->pid == 0)
+	{
+		ft_clear_fd(process->prompt, 1);
+		clean(process->shell);
 		exit(last_exit);
+	}
 	g_signal = last_exit;
 }
 
@@ -92,6 +96,7 @@ void	ft_exec_process(t_process *process)
 		else 
 			execve(path, process->args, env_tab);
 		ft_freetab(env_tab);
-		exec_error(process->args[0], strerror(errno), errno, process->pid);
+		ft_clear_fd(process->prompt, 1);
+		exec_error(process->args[0], strerror(errno), errno, process->pid, process->shell);
 	}
 }

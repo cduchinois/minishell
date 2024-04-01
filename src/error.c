@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 16:38:11 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/31 18:28:22 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:09:39 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,14 @@ char	*ft_free_join(char *str, char *add)
 	return (str);
 }
 
-int    exec_error(char *cmd, char *msg, int error, int ex)
+int    exec_error(char *cmd, char *msg, int error, int ex, t_shell *shell)
 {
     char *full_msg;
     full_msg = ft_free_join(cmd, " : ");
     full_msg = ft_free_join(full_msg, msg);
     ft_putendl_fd(full_msg, STDERR_FILENO);
     free(full_msg);
+    clean(shell);
     if (ex == 0 && error == EFAULT)
         exit (127);
     if (ex == 0)

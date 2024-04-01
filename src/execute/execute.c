@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:58:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/31 19:53:26 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:01:57 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,31 @@ void	ft_fork(t_prompt *prompt, int i)
 	else
 	{
 		if (prompt->last_pipe_fd != -1)
-		{
 			close(prompt->last_pipe_fd);
-		}
 		prompt->last_pipe_fd = prompt->process[i]->fd[0];
 		close(prompt->process[i]->fd[1]);
 	}
 }
 
-void	ft_clear_fd(t_prompt *prompt)
+void	ft_clear_fd(t_prompt *prompt, int sub)
 {
-	int i;
+	int i = 0;
 
-	i = 0;
-	while (i < prompt->process_count)
+	while(i < prompt->process_count)
 	{
-		if (prompt->process[i]->fd[0] > -1)
+		if (prompt->process[i]->fd[0] > 0)
 			close(prompt->process[i]->fd[0]);
-		if (prompt->process[i]->fd[1] > -1)
+		if (prompt->process[i]->fd[1] > 0)
 			close(prompt->process[i]->fd[1]);
 		i++;
 	}
-	dup2(1, STDIN_FILENO);
-	dup2(0, STDOUT_FILENO);
+	if (sub == 0)
+	{
+		dup2(prompt->backup_fd[0], STDIN_FILENO);
+		dup2(prompt->backup_fd[1], STDOUT_FILENO);
+	}
+	close(prompt->backup_fd[0]);
+	close(prompt->backup_fd[1]);
 	unlink(".here_doc");
 }
 
@@ -86,6 +88,8 @@ int	ft_execute(t_prompt *prompt)
 	int	sig;
 
 	i = -1;
+	prompt->backup_fd[0] = dup(STDIN_FILENO);
+	prompt->backup_fd[1] = dup(STDOUT_FILENO);
 	prompt->last_pipe_fd = -1;
 	if (prompt->process_count == 1 && prompt->process[0]->command
 		&& ft_strcmp(prompt->process[0]->command, "exit") == 0)
@@ -102,6 +106,6 @@ int	ft_execute(t_prompt *prompt)
 			get_status(sig);
 		}
 	}
-	ft_clear_fd(prompt);
+	ft_clear_fd(prompt, 0);
 	return (EXIT_SUCCESS);
 }

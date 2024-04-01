@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pathname.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:39:25 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/13 18:17:30 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 17:15:09 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,8 @@ char *get_pathname(t_lst_env *env, char *command)
 
     if (found_pathname)
     {
-        free(command);
         return found_pathname;
     } else {
-        free(command);
         return NULL;
     }
 }
