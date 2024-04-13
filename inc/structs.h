@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:22:37 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 12:29:19 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/13 19:57:01 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,5 +130,6 @@ typedef struct s_lst_env
 	bool    export_only;
 	struct s_lst_env *next;
 }  t_lst_env;
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 12:36:13 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 13:54:17 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/13 19:29:06 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,6 @@ void	parse_line(t_shell *shell, char *line)
 
 	input = ft_strdup(line);
 	token = ft_strtoken(input, shell);
-    // while (token)
-    // {
-    //     printf("token:%s\n", token->content);
-    //     token = token->next;
-    // }
 	if (!token)
 	{
 		free(input);

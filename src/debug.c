@@ -46,6 +46,7 @@ void    print_prompt(t_prompt *prompt)
         print_process(prompt->process[i]);
         i++;
     }
+    printf(" EXIT CODE : %d \n ", prompt->last_exit);
 }
 
 void print_process(t_process *process)

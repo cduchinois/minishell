@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 16:42:23 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 12:42:34 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/01 16:47:50 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int		ft_printstr(char *s);
 int		ft_putptr(unsigned long long n);
 int		ft_puthex(char c, unsigned int n);
 int		ft_putuint(unsigned int n);
+void    ft_freelst(t_list *lst);
 
 char	*get_next_line(int fd);
 

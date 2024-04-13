@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:20:29 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 15:16:06 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/13 20:00:46 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,13 @@ int	find_end(char *input, int *index, bool *squote, bool *dquote)
 t_list *extract_token(char *input, int *index, t_shell *shell)
 {
     bool was_in_single_quote = false, was_in_double_quote = false;
-    int start = find_start(input, index, &was_in_single_quote, &was_in_double_quote);
-    if (start == -1) return NULL;
-    // printf("start_i:%d\n", *index);
+    bool in_squote = false, in_dquote = false;
 
-    int end = find_end(input, index, &was_in_single_quote, &was_in_double_quote);
-        // printf("end_i:%d\n", *index);
+    int start = find_start(input, index, &in_squote, &in_dquote);
+    if (start == -1) return NULL;
+    was_in_single_quote = in_squote;
+    was_in_double_quote = in_dquote;
+    int end = find_end(input, index, &in_squote, &in_dquote);
     if (start < end)
     {
         char *token_str = ft_strndup(input + start, end - start);
@@ -99,9 +100,10 @@ t_list *extract_token(char *input, int *index, t_shell *shell)
             trim_quote(&token_str);
         t_list *token = safe_malloc(sizeof(t_list), shell);
         token->content = token_str;
-        // printf("token_str: %s\n", token->content);
         if (ft_strchr(token_str, '$') && !was_in_single_quote)
+        {
             token->content = ft_expand_token(token_str, shell);
+        }
         if (ft_strchr(token_str, '*') && !was_in_single_quote && !was_in_double_quote)
         {
             t_list *token_lst = handle_wildcard(token_str, shell);

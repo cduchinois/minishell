@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 06:39:08 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 12:32:20 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/13 19:46:21 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void free_infile_list(t_lst_infile *head)
         tmp = head;
         head = head->next;
         free(tmp->name);
-        if (head->here_doc)
+        if (tmp->here_doc)
             unlink(".here_doc");
         free(tmp);
     }
@@ -62,7 +62,8 @@ void free_prompt(t_prompt *prompt)
     {
         if (prompt->user_input)
             free(prompt->user_input);
-        //freetokenlist
+        if (prompt->token)
+            ft_freelst(prompt->token);
         int i = 0;
         while (i < prompt->process_count)
         {
@@ -88,6 +89,14 @@ void ft_free_env(t_lst_env *env)
     }
 }
 
+void cleanup_readline()
+{
+    clear_history();  // Clear the history list by removing all items
+    rl_clear_history();  // Frees the history list; requires newer versions of readline
+    rl_cleanup_after_signal();  // Clean up Readline state after a signal
+    rl_deprep_terminal();  // De-initialize the terminal for Readline
+}
+
 void clean(t_shell *shell) 
 {
     if (shell)
@@ -96,6 +105,7 @@ void clean(t_shell *shell)
             ft_free_env(shell->env);
         if (shell->prompt)
             free_prompt(shell->prompt);
+        cleanup_readline();
         free(shell);
     }
 }
