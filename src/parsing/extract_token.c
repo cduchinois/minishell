@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:20:29 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 16:04:19 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 16:11:04 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ t_list *extract_token(char *input, int *index, t_shell *shell)
     if (start < end || was_in_double_quote || was_in_single_quote)
     {
         char *token_str = ft_strndup(input + start, end - start + 1);
-        printf("token:%s\n", token_str);
         if (!(was_in_double_quote || was_in_single_quote)) 
         {
             token_str = trim_quote(token_str);
