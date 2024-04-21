@@ -1,77 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filelst_creation.c                                 :+:      :+:    :+:   */
+/*   file_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 11:28:30 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 18:30:12 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/18 19:02:08 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-t_lst_infile	*create_infile_node(const char *filename, \
-				bool here_doc, t_shell *shell)
-{
-	t_lst_infile	*node;
 
-	node = (t_lst_infile *)safe_malloc(sizeof(t_lst_infile), shell);
-	node->name = strdup(filename);
-	node->here_doc = here_doc;
-	node->next = NULL;
-	return (node);
-}
 
-void	append_infile_node(t_lst_infile **head, t_lst_infile *new_node)
-{
-	t_lst_infile	*current;
+// t_lst_outfile	*create_outfile_node(const char *filename, \
+// 				int append_mode, t_shell *shell)
+// {
+// 	t_lst_outfile	*node;
 
-	if (!head || !new_node)
-		return ;
-	if (*head == NULL)
-	{
-		*head = new_node;
-	}
-	else
-	{
-		current = *head;
-		while (current->next != NULL)
-			current = current->next;
-		current->next = new_node;
-	}
-}
+// 	node = (t_lst_outfile *)safe_malloc(sizeof(t_lst_outfile), shell);
+// 	node->name = strdup(filename);
+// 	node->append_mode = append_mode;
+// 	node->next = NULL;
+// 	return (node);
+// }
 
-t_lst_outfile	*create_outfile_node(const char *filename, \
-				int append_mode, t_shell *shell)
-{
-	t_lst_outfile	*node;
+// void	append_outfile_node(t_lst_outfile **head, t_lst_outfile *new_node)
+// {
+// 	t_lst_outfile	*current;
 
-	node = (t_lst_outfile *)safe_malloc(sizeof(t_lst_outfile), shell);
-	node->name = strdup(filename);
-	node->append_mode = append_mode;
-	node->next = NULL;
-	return (node);
-}
-
-void	append_outfile_node(t_lst_outfile **head, t_lst_outfile *new_node)
-{
-	t_lst_outfile	*current;
-
-	if (!head || !new_node)
-		return ;
-	if (*head == NULL)
-	{
-		*head = new_node;
-	}
-	else
-	{	
-		current = *head;
-		while (current->next)
-		{
-			current = current->next;
-		}
-		current->next = new_node;
-	}
-}
+// 	if (!head || !new_node)
+// 		return ;
+// 	if (*head == NULL)
+// 	{
+// 		*head = new_node;
+// 	}
+// 	else
+// 	{	
+// 		current = *head;
+// 		while (current->next)
+// 		{
+// 			current = current->next;
+// 		}
+// 		current->next = new_node;
+// 	}
+// }

@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 21:00:39 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/17 19:50:56 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/20 10:59:16 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_isredir(char *s)
 	{
 		return (0);
 	}
-	return (s[0] == '>' || s[0] == '<');
+	return (ft_strcmp(s, ">") == 0 || ft_strcmp(s, "<") == 0|| ft_strcmp(s, ">>") == 0 || ft_strcmp(s, "<<") == 0);
 }
 
 int	ft_redirlen(char *s)
@@ -51,50 +51,59 @@ int	count_tokens(char *input)
 	return (token_count);
 }
 
-int	file_check(char **tokens)
+int file_check(t_list *tokens)
 {
-	int	i;
-
-	i = 0;
-	while (tokens[i])
-	{
-		if (ft_isredir(tokens[i]) == !0)
-		{
-			if (!tokens[i + 1] || ft_strcmp(tokens[i + 1], "|") == 0)
-			{
-				printf("Error: Redirection file incomplete\n");
-				return (-1);
-			}
-		}
-		i++;
-	}
-	return (0);
+    while (tokens != NULL) {
+        if (ft_isredir(tokens->content) == 1) {
+            if (tokens->next == NULL || ft_strcmp(tokens->next->content, "|") == 0) {
+                printf("Error: Redirection file incomplete\n");
+                return (-1);
+            }
+        }
+        tokens = tokens->next;
+    }
+    return 0;
 }
 
-char	**ft_strtoken(char *input, t_shell *shell)
+t_list *ft_strtoken(char *input, t_shell *shell)
 {
-	char	**tokens;
+    int i = 0;
+    t_list *token = NULL;
+    t_list *last = NULL;
+    
 
-	int (i) = 0;
-	int (k) = 0;
-	int (token_count) = count_tokens(input);
-	if (token_count < 0)
-	{
-		printf("Syntax error: Incomplete quote\n");
-		return (NULL);
-	}
-	tokens = safe_malloc((token_count + 1) * sizeof(char *), shell);
-	while (input[i])
-	{
-		tokens[k] = extract_token(input, &i, shell);
-		if (tokens[k])
-			k++;
-	}
-	tokens[k] = NULL;
-	if (file_check(tokens) < 0)
-	{
-		ft_freetab(tokens);
-		return (NULL);
-	}
-	return (tokens);
+    int token_count = count_tokens(input);
+    if (token_count < 0)
+    {
+        free(input);
+        printf("Syntax error: Incomplete quote\n");
+        return NULL;
+    }
+    while (input[i])
+    {
+        t_list *new = extract_token(input, &i, shell);
+        if (new == NULL || new->content == NULL)
+        {
+            continue;
+        }
+        if (token == NULL)
+        {
+            token = new;
+            last = new;
+        } 
+        else 
+        {
+            last->next = new;
+            last = new;
+            while (last->next)
+                last = last->next;
+        }
+    }
+    free(input);
+    if (file_check(token) < 0)
+    {
+        ft_freelst(token);
+        return NULL;
+    }
+    return token;
 }

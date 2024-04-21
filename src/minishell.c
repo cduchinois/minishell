@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 11:09:41 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/23 17:11:07 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 13:32:34 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,12 @@ void minishell(t_shell *shell)
 			setup_signal_handlers_non_empty_line();
 			add_history(line);
 			parse_line(shell, line);
+            // print_prompt(shell->prompt);
 			if (shell->prompt)
+			{ 	
 				ft_execute(shell->prompt);
-				// free_prompt(shell->prompt);
+				free_prompt(shell->prompt);
+			}
 			setup_signal_handlers();
 		}
 	}
@@ -59,7 +62,8 @@ int main(int argc, char **argv, char **envp)
 	if (argc != 1)
 		return (EXIT_FAILURE); //Add error msg
 	init_shell(&shell, envp);
-	minishell(shell);    
-	//Clean(shell); Free and clean everything
+	minishell(shell);
+	clean(shell);
+	//free process
 	return (EXIT_SUCCESS);
 }

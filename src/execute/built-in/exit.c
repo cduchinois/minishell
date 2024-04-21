@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:55:45 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/24 18:00:44 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 14:09:23 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static int	ft_is_valid_exit(char *num)
 		i++;
 	if (!ft_isdigit(num[i]))
 		return (EXIT_FAILURE);
+    if (!num[i]) // If only a sign is present without digits, it's an error
+        return (EXIT_FAILURE);
 	while (num[i])
 	{
 		if (!ft_isdigit(num[i]))
@@ -36,21 +38,36 @@ static int	ft_is_valid_exit(char *num)
 
 int	ft_exit(t_process *process)
 {
+	int ex;
+
+	ex = process->shell->exit_status;
+
 	if (!process)
 		return (EXIT_FAILURE);
 	if (process->argc < 2)
-		exit(process->shell->exit_status);
+	{
+		ft_clear_fd(process->prompt);
+		ft_free_env(process->shell->env);
+		free(process->shell);
+		free_prompt(process->prompt);
+		exit(ex);
+	}
 	if (ft_is_valid_exit(process->args[1]) == EXIT_FAILURE)
 	{
-		exec_error("exit", "numeric argument required", 2, process->pid);
-		exit(2);
+		ft_putendl_fd("Exit : numeric argument required", 2);
+		process->shell->exit_status = 2;
+        return (EXIT_FAILURE);
 	}
 	else if (process->argc > 2)
 	{
-		ft_putendl_fd("exit", 2);
-		exec_error("exit", "too many arguments", 1, process->pid);
-		g_signal = 1;
+		ft_putendl_fd("Exit : too many arguments", 2);
+		process->shell->exit_status = 1;
 		return (EXIT_FAILURE);
 	}
-	exit (ft_atoi(process->args[1]));
+	ex = ft_atoi(process->args[1]);
+	ft_clear_fd(process->prompt);
+	ft_free_env(process->shell->env);
+	free(process->shell);
+	free_prompt(process->prompt);
+	exit (ex);
 }

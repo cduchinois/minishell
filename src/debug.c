@@ -31,22 +31,25 @@ void    print_shell(t_shell *shell)
 
 void    print_prompt(t_prompt *prompt)
 {
+    if (!prompt)
+        return ;
     printf("_____PROMPT_____\n");
-    printf(" USER INPUT : %s \n ", prompt->user_input);
-    int i = 0;
-    while (prompt->tokens[i])
+    while (prompt->token)
     {
-        printf("token %d : %s --- ", i, prompt->tokens[i]);
-        i++;
+        printf("token %s\n ", prompt->token->content);
+        prompt->token = prompt->token->next;
     }
     printf("\nPROCESS COUNT : %d\n", prompt->process_count);
     printf("last_exit: %d\n", prompt->last_exit);
-    i = 0;
+    printf("last_exit: %d\n", prompt->last_exit);
+
+    int i = 0;
     while (i < prompt->process_count)
     {
         print_process(prompt->process[i]);
         i++;
     }
+    printf(" EXIT CODE : %d \n ", prompt->last_exit);
 }
 
 void print_process(t_process *process)
@@ -56,19 +59,19 @@ void print_process(t_process *process)
     printf(" ARGC : %d \n ", process->argc);
     printf(" FD IN : %d \n ", process->fd[0]);
     printf(" FD OUT : %d \n ", process->fd[1]);
-    t_lst_infile *infile_temp = process->infile;
-    while (infile_temp)
+    t_lst_file *file_temp = process->file;
+    while (file_temp)
     {
-        printf("infile %s; here_doc %d\n", infile_temp->name, infile_temp->here_doc);
-        infile_temp = infile_temp->next;
+        printf("file type: %d; mode %d; filename:%s\n", file_temp->type, file_temp->mode, file_temp->name);
+        file_temp = file_temp->next;
     }
 
-    t_lst_outfile *outfile_temp = process->outfile;
-    while (outfile_temp)
-    {
-        printf("outfile %s; append_mode %d\n", outfile_temp->name, outfile_temp->append_mode);
-        outfile_temp = outfile_temp->next;
-    }
+    // t_lst_outfile *outfile_temp = process->outfile;
+    // while (outfile_temp)
+    // {
+    //     printf("outfile %s; append_mode %d\n", outfile_temp->name, outfile_temp->append_mode);
+    //     outfile_temp = outfile_temp->next;
+    // }
     for (int i = 0; process->args && process->args[i]; i++) {
         printf("arg[%d]: %s\n", i, process->args[i]);
     }

@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 12:19:07 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/23 19:41:14 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 13:32:30 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 // CTRL-C = SIGINT.
 // CTRL-\ = SIGQUIT.
-void handle_sigint(int sig) {
+void handle_sigint(int sig)
+{
     // For Ctrl-C, simply print a new line and prompt in main loop; do minimal here.
     (void)sig; // Prevent unused variable warning.
     write(STDOUT_FILENO, "\n", 1); // Move to a new line.
@@ -32,7 +33,6 @@ void handle_sigint_interactive(int sig) {
     rl_on_new_line();
     rl_replace_line("", 0); // Clear the line.
     // rl_redisplay(); // Redisplay the prompt on a new line.
-
 }
 
 void handle_sigquit(int sig) {
@@ -74,7 +74,7 @@ void setup_signal_handlers_non_empty_line()
     sigaction(SIGINT, &sa_int, NULL);
 
     // Exit on SIGQUIT
-     sa_quit.sa_handler = handle_sigquit;
+    sa_quit.sa_handler = handle_sigquit;
     sigemptyset(&sa_quit.sa_mask);
     sa_quit.sa_flags = 0; // No special flags
     if (sigaction(SIGQUIT, &sa_quit, NULL) == -1) {

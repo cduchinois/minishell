@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 15:22:37 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/23 17:53:40 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/20 11:03:45 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 #define STRUCTS_H
+# include "../src/libft/inc/libft.h"
 
 #include <stdbool.h>
 
@@ -37,8 +38,8 @@ enum	export_status
 
 typedef	struct s_prompt t_prompt;
 typedef	struct s_shell t_shell;
-typedef	struct s_lst_infile t_lst_infile;
-typedef	struct s_lst_outfile t_lst_outfile;
+typedef	struct s_lst_file t_lst_file;
+// typedef	struct s_lst_outfile t_lst_outfile;
 typedef	struct s_lst_env t_lst_env;
 
 typedef	struct s_process
@@ -52,8 +53,8 @@ typedef	struct s_process
 	int		fd[2];
 	int		pid;
 	int return_status;
-	t_lst_infile *infile;
-	t_lst_outfile *outfile;
+	t_lst_file *file;
+	// t_lst_outfile *outfile;
 	t_prompt *prompt;
 	t_shell *shell;
 } t_process;
@@ -75,8 +76,8 @@ typedef	struct s_process
 */
 typedef struct s_prompt
 {
-	char *user_input;
-	char **tokens;
+	// char *user_input;
+	t_list *token;
 	t_process **process;
 	int process_count;
 	int last_exit;
@@ -106,21 +107,24 @@ typedef struct s_shell
 	int exit_status;
 	int pid;
 	int error;
+
+	int fd[2];
 } t_shell;
 
-typedef struct s_lst_infile
+typedef struct s_lst_file
 {
+	int type;//0=infile; 1=outfile
+	int mode;//infile:1=here_doc
 	char *name;
-	bool here_doc;
-	struct s_lst_infile *next;
-} t_lst_infile;
+	struct s_lst_file *next;
+} t_lst_file;
 
-typedef struct s_lst_outfile
-{
-	char *name;
-	int append_mode;
-	struct s_lst_outfile *next;
-} t_lst_outfile;
+// typedef struct s_lst_outfile
+// {
+// 	char *name;
+// 	int append_mode;
+// 	struct s_lst_outfile *next;
+// } t_lst_outfile;
 
 typedef struct s_lst_env
 {
@@ -129,5 +133,6 @@ typedef struct s_lst_env
 	bool    export_only;
 	struct s_lst_env *next;
 }  t_lst_env;
+
 
 #endif

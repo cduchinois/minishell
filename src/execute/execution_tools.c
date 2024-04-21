@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:25 by fgranger          #+#    #+#             */
-/*   Updated: 2024/03/24 19:38:16 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 14:37:44 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**rebuild_env(t_lst_env *env)
 	char		*buffer;
 
 	len = ft_env_len(env);
-	env_tab = malloc(sizeof(char *) * len + 1);
+	env_tab = malloc(sizeof(char *) * (len + 1));
 	if (!env_tab)
 		return (NULL);
 	tmp = env;
@@ -34,8 +34,13 @@ char	**rebuild_env(t_lst_env *env)
 		tmp = tmp->next;
 		i++;
 	}
-	env_tab[i -1] = NULL;
+	env_tab[i] = NULL;
 	return (env_tab);
+}
+
+void clean_shell(t_shell *shell)
+{
+	ft_free_env(shell->env);	
 }
 
 void	ft_exec_builtin(t_process *process)
@@ -55,8 +60,16 @@ void	ft_exec_builtin(t_process *process)
 	else if (ft_strcmp(process->command, "cd") == 0)
 		last_exit = ft_cd(process);
 	if (process->pid == 0)
+	{
+		ft_clear_fd(process->prompt);
+		ft_free_env(process->shell->env);
+		free(process->shell);
+		free_prompt(process->prompt);
 		exit(last_exit);
-	g_signal = last_exit;
+	}
+	if (process->shell->exit_status == 0)
+		process->shell->exit_status = last_exit;
+	// printf("exit status updated ft_execbt:%d\n", process->shell->exit_status);
 }
 
 bool	ft_is_builtin(char *cmd)
@@ -76,19 +89,36 @@ bool	ft_is_builtin(char *cmd)
 	return (false);
 }
 
-void	ft_exec_process(t_process *process)
+void ft_exec_process2(t_process **process, int i)
 {
-	char	*path;
-	char	**env_tab;
+    char *path;
+    char **env_tab;
+    struct stat file_stat;
 
-	if (ft_is_builtin(process->command))
-		ft_exec_builtin(process);
-	else
-	{
-		env_tab = rebuild_env(process->shell->env);
-		path = get_pathname(process->shell->env, process->command);
-		execve(path, process->args, env_tab);
-		ft_freetab(env_tab);
-		exec_error(process->args[0], strerror(errno), errno, process->pid);
+    if (ft_is_builtin(process[i]->command))
+        ft_exec_builtin(process[i]);	
+    else
+    {
+        env_tab = rebuild_env(process[i]->shell->env);
+        path = get_pathname(process[i]->shell->env, process[i]->command, process[i]);
+		if (path == NULL) // Check if path is NULL
+        {
+			ft_freetab(env_tab);
+            exec_error2(process[i], "command not found", 127, process[i]->pid);
+        }
+        if (execve(path, process[i]->args, env_tab) == -1)
+        {
+            ft_freetab(env_tab);
+            exec_error2(process[i], "command not found", 127, process[i]->pid);
+            // exit(127); // 127 for command not found
+        }
+        ft_freetab(env_tab);
+		ft_clear_fd(process[i]->prompt);
+    	ft_free_env(process[i]->shell->env);
+    	free(process[i]->shell);
+    	free_prompt(process[i]->prompt);
+		exit(EXIT_SUCCESS);
 	}
 }
+
+
