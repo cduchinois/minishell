@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pathname.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:39:25 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 01:51:58 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 13:16:18 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,29 +89,31 @@ char *get_pathname(t_lst_env *env, char *command, t_process *process) {
     {
             if (ft_strncmp(command, "./", 2) == 0)
                 command = ft_strcpy(command, command + 2);
+            if (!command)
+                return NULL;
             if (lstat(command, &file_stat) == 0)
             {
-                free(command); 
+                //free(command); 
                 if (S_ISREG(file_stat.st_mode))
                 {
                     if (access(command, X_OK) == 0)
                         // exec_error(process->args[0], "Is a file\n", 126, process->pid);
-                        exec_error2(&process, "Is a file\n", 126, process->pid);
+                        exec_error2(process, "Is a file\n", 126, process->pid);
                     else
-                        exec_error2(&process, "Permission denied\n", 126, process->pid);                    
+                        exec_error2(process, "Permission denied\n", 126, process->pid);                    
                 } 
                 else if (S_ISDIR(file_stat.st_mode))
                 {
                     // if (access(command, X_OK) == 0)
-                        exec_error2(&process, "Is a directory\n", 126, process->pid);
+                        exec_error2(process, "Is a directory\n", 126, process->pid);
                     // else 
                     //     exec_error(process->args[0], " Permission denied\n", 126, process->pid);    
                 } 
             }
             else 
             {
-                free(command);
-                exec_error2(&process, "No such file or directory\n", 127, process->pid);
+                //free(command);
+                exec_error2(process, "No such file or directory\n", 127, process->pid);
  
             }
     }
@@ -128,7 +130,7 @@ char *get_pathname(t_lst_env *env, char *command, t_process *process) {
         if (access(command, F_OK | X_OK) == 0)
             return command;
         else {
-            free(command);
+            //free(command);
             return NULL;
         }
     }
@@ -136,7 +138,7 @@ char *get_pathname(t_lst_env *env, char *command, t_process *process) {
     // Split the PATH environment variable into individual directories
     path = ft_split(path_env->value, ':');
     if (!path) {
-        free(command);
+       //free(command);
         return NULL;
     }
 
@@ -153,10 +155,10 @@ char *get_pathname(t_lst_env *env, char *command, t_process *process) {
     ft_freetab(path);
 
     if (found_pathname) {
-        free(command);
+        //free(command);
         return found_pathname;
     } else {
-        free(command);
+        //free(command);
         return NULL;
     }
 }

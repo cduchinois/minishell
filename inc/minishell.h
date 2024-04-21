@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 02:40:28 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 13:32:39 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int	ft_env_len(t_lst_env *env);
 
 //error
 int    exec_error(char *cmd, char *msg, int error, int ex);
-int exec_error2(t_process **process, char *msg, int error, int ex);
+int exec_error2(t_process *process, char *msg, int error, int ex);
 
 // new
 int	ft_set_files_bt(t_prompt *prompt, int i);

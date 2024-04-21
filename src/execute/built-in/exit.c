@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:55:45 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/18 09:50:20 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 12:52:31 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,20 @@ static int	ft_is_valid_exit(char *num)
 
 int	ft_exit(t_process *process)
 {
+	int ex;
+
+	ex = process->shell->exit_status;
+
 	if (!process)
 		return (EXIT_FAILURE);
 	if (process->argc < 2)
-		exit(process->shell->exit_status);
+	{
+		ft_clear_fd(process->prompt);
+		ft_free_env(process->shell->env);
+		free(process->shell);
+		free_prompt(process->prompt);
+		exit(ex);
+	}
 	if (ft_is_valid_exit(process->args[1]) == EXIT_FAILURE)
 	{
 		exec_error("exit", "numeric argument required", 2, process->pid);
@@ -55,5 +65,10 @@ int	ft_exit(t_process *process)
 		process->shell->exit_status = 1;
 		return (EXIT_FAILURE);
 	}
-	exit (ft_atoi(process->args[1]));
+	ex = ft_atoi(process->args[1]);
+	ft_clear_fd(process->prompt);
+	ft_free_env(process->shell->env);
+	free(process->shell);
+	free_prompt(process->prompt);
+	exit (ex);
 }

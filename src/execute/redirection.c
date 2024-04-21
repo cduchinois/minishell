@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:57:42 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/19 21:33:16 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 13:22:27 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	handle_here_doc(char *delimiter, int i, t_prompt *prompt)
 
 	fd_infile = open(".here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_infile < 0)
-		return (exec_error(".here_doc", strerror(errno),
+		return (exec_error2(prompt->process[i], strerror(errno),
 				errno, prompt->process[i]->pid), -1);
 	while (1)
 	{
@@ -43,7 +43,7 @@ static int set_infile_bt(t_lst_file *file, int i, t_prompt *prompt)
 
     tmp_in = dup(STDIN_FILENO);
     if (tmp_in == -1) {
-        return exec_error("dup", strerror(errno), errno, prompt->process[i]->pid);
+        return exec_error2(prompt->process[i], strerror(errno), errno, prompt->process[i]->pid);
     }
 
     if (file->mode == 1)
@@ -53,7 +53,7 @@ static int set_infile_bt(t_lst_file *file, int i, t_prompt *prompt)
 
     if (fd == -1) {
         close(tmp_in);
-        return exec_error(file->name, strerror(errno), errno, prompt->process[i]->pid);
+        return exec_error2(prompt->process[i], strerror(errno), errno, prompt->process[i]->pid);
     }
     close(tmp_in);
 
@@ -66,7 +66,7 @@ static int set_outfile_bt(t_lst_file *file, int i, t_prompt *prompt)
     fd = open(file->name, file->mode, 0644);
     if (fd == -1)
 	{
-        exec_error(file->name, strerror(errno), 1, prompt->process[i]->pid);
+        exec_error2(prompt->process[i], strerror(errno), 1, prompt->process[i]->pid);
         return 1;
     }
     dup2(fd, STDOUT_FILENO);
@@ -108,7 +108,7 @@ static	int	set_infile(t_lst_file *file, int i, t_prompt *prompt)
 	close(tmp_in);
 	if (fd == -1)
 	{
-		return (exec_error(file->name, strerror(errno), 1, prompt->process[i]->pid));
+		return (exec_error2(prompt->process[i], strerror(errno), 1, prompt->process[i]->pid));
 	}
 	dup2(fd, STDIN_FILENO);
     // printf("setinfile->fd:%d\n", fd);
@@ -122,7 +122,7 @@ static int set_outfile(t_lst_file *file, int i, t_prompt *prompt)
     fd = open(file->name, file->mode, 0644);
     if (fd == -1)
 	{
-        exec_error(file->name, strerror(errno), 1, prompt->process[i]->pid);
+        exec_error2(prompt->process[i], strerror(errno), 1, prompt->process[i]->pid);
         return 1;
     }
     dup2(fd, STDOUT_FILENO);
