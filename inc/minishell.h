@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 13:32:39 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 14:59:43 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ char *ft_expand_token(char *token, t_shell *shell);
 t_list *handle_wildcard(char *token_str, t_shell *shell);
 int find_start(char *input, int *index, bool *in_squote, bool *in_dquote);
 int find_end(char *input, int *index, bool *squote, bool *dquote);
-void trim_quote(char **token);
-void remove_quotes(char **token, char quote);
+char *trim_quote(char *token);
+char *remove_quotes(char *token, char quote);
 
 char	*handle_quotes(char *str, const char *token, int *i);
 

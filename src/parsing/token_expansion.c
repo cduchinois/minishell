@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:19:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/17 14:48:34 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 14:51:35 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ char	*expand_variable(char *str, const char *token, int *i, t_shell *shell)
 	free(var_name);
 	return (str);
 }
-
-
 
 char	*ft_expand_token(char *token, t_shell *shell)
 {

@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:25 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/21 13:42:30 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 14:37:44 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,44 +87,6 @@ bool	ft_is_builtin(char *cmd)
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (true);
 	return (false);
-}
-
-
-void ft_exec_process(t_process *process)
-{
-    char *path;
-    char **env_tab;
-    struct stat file_stat;
-
-    if (ft_is_builtin(process->command))
-    {
-        ft_exec_builtin(process);
-        // printf("is exit status updated:%d\n", process->shell->exit_status);
-    }
-    else
-    {
-        env_tab = rebuild_env(process->shell->env);
-        path = get_pathname(process->shell->env, process->command, process);
-		if (path == NULL) // Check if path is NULL
-        {
-			ft_freetab(env_tab);
-			ft_free_env(process->shell->env);
-			ft_clear_fd(process->prompt);
-            exec_error2(process, "command not found", 127, process->pid);
-        }
-        if (execve(path, process->args, env_tab) == -1)
-        {
-            ft_freetab(env_tab);
-			ft_free_env(process->shell->env);
-            exec_error2(process, "command not found", 127, process->pid);
-            // exit(127); // 127 for command not found
-        }
-        ft_freetab(env_tab);
-		ft_free_env(process->shell->env);
-		exit(EXIT_SUCCESS);
-	}
-	// ft_freetab(env_tab);
-	// ft_free_env(process->shell->env);
 }
 
 void ft_exec_process2(t_process **process, int i)

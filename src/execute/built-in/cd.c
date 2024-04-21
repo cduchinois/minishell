@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:03 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/19 17:36:34 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 14:44:19 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	ft_cd(t_process *process)
 
 	if (process->argc > 2)
     {
-                ft_putstr_fd(" too many arguments", 2);
+                ft_putstr_fd(" too many arguments\n", 2);
 
 		return (EXIT_FAILURE);
     }

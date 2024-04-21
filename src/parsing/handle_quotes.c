@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:01:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/19 19:25:05 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 15:01:17 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,27 +37,25 @@ char	*handle_quotes(char *str, const char *token, int *i)
 	return (new_str);
 }
 
-void remove_quotes(char **token, char quote)
+char *remove_quotes(char *token, char quote)
 {
-    char *result = malloc(strlen(*token) + 1);
-    if (!result) return;
-
-    char *src = *token;
-    char *dst = result;
-    while (*src)
+    char *result = malloc(ft_strlen(token) + 1);
+    if (!result) 
+        return NULL;
+    while (token)
     {
-        if (*src != quote)
-            *dst++ = *src;
-        src++;
+        if (*token != quote)
+            *result++ = *token;
+        token++;
     }
-    *dst = '\0';
-    free(*token);
-    *token = result;
+    *result = '\0';
+    free(token);
+    return (result);
 }
 
-void trim_quote(char **token)
+char *trim_quote(char *token)
 {
-    char    *str = *token;
+    char    *str = token;
     size_t  len = strlen(str);
     int     single_quotes = 0;
     int     double_quotes = 0;
@@ -71,8 +69,9 @@ void trim_quote(char **token)
             double_quotes++;
         i++;
     }
-    if (single_quotes % 2 == 0)
-        remove_quotes(token, '\'');
-    if (double_quotes % 2 == 0)
-        remove_quotes(token, '"');
+    if (single_quotes && single_quotes % 2 == 0)
+        token = remove_quotes(token, '\'');
+    if (double_quotes && double_quotes % 2 == 0)
+        token = remove_quotes(token, '"');
+    return (token);
 }

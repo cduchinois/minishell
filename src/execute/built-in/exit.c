@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:55:45 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/21 12:52:31 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 14:09:23 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,13 @@ int	ft_exit(t_process *process)
 	}
 	if (ft_is_valid_exit(process->args[1]) == EXIT_FAILURE)
 	{
-		exec_error("exit", "numeric argument required", 2, process->pid);
+		ft_putendl_fd("Exit : numeric argument required", 2);
 		process->shell->exit_status = 2;
         return (EXIT_FAILURE);
 	}
 	else if (process->argc > 2)
 	{
-		// ft_putendl_fd("exit", 2);
-		exec_error("exit", "too many arguments", 1, process->pid);
+		ft_putendl_fd("Exit : too many arguments", 2);
 		process->shell->exit_status = 1;
 		return (EXIT_FAILURE);
 	}

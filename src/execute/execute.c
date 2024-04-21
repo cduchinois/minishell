@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 16:58:05 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 13:46:44 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 14:38:13 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int ft_execute(t_prompt *prompt)
         if (ft_set_files_bt(prompt, 0) != EXIT_SUCCESS)
             prompt->shell->exit_status = 1;
         else
-            ft_exec_process(prompt->process[0]);
+            ft_exec_builtin(prompt->process[0]);
         ft_clear_fd(prompt);
         return (0);
     }

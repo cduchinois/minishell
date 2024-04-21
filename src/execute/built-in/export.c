@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:55:30 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/15 23:12:07 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 14:15:27 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	add_var(t_lst_env *env, char *var, int status, t_shell *shell)
 		new = env_new_node(key, value, true, shell);
 	}
 	env_append(&env, new);
+	free(key);
+	free(value);
 	return (EXIT_SUCCESS);
 }
 
