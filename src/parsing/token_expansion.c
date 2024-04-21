@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:19:32 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 14:51:35 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 16:39:10 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_expand_value(char *var_name, t_shell *shell)
 	char	*value;
 	if (ft_strcmp(var_name, "?") == 0)
 	{
-		value = ft_itoa(shell->exit_status);
+		value = ft_itoa(g_signal);
 		return (value);
 	} 
 	else
@@ -68,6 +68,8 @@ char	*expand_variable(char *str, const char *token, int *i, t_shell *shell)
 	free(var_name);
 	return (str);
 }
+
+
 
 char	*ft_expand_token(char *token, t_shell *shell)
 {

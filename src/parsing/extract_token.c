@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:20:29 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 14:58:50 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 16:04:33 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,11 +135,11 @@ t_list *extract_token(char *input, int *index, t_shell *shell)
     {
         char *token_str = ft_strndup(input + start, end - start);
         if (!(was_in_double_quote || was_in_single_quote))
-            token_str = trim_quote(token_str);
+            trim_quote(&token_str);
         if (was_in_double_quote)
-            token_str = remove_quotes(token_str, '"');
+            remove_quotes(&token_str, '"');
         if (was_in_single_quote)
-            token_str = remove_quotes(token_str, '\'');
+            remove_quotes(&token_str, '\'');
         if (ft_strchr(token_str, '$') && !was_in_single_quote)
             token_str = ft_expand_token(token_str, shell);
         if (ft_strchr(token_str, '*') && !was_in_single_quote && !was_in_double_quote)

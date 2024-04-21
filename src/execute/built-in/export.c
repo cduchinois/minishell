@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:55:30 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/21 14:15:27 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 15:30:38 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ int	export_var(t_shell *shell, char *var)
 
 	input_status = var_is_valid(var, 0);
 	if (input_status == UNVALID)
-    {
-        ft_putstr_fd(" not a valid identifier\n", 2);
+	{
+		ft_putstr_fd(" not a valid identifier\n", 2);
 		return (EXIT_FAILURE);
-    }
-    else if (var_exist(shell->env, var))
+	}
+	else if (var_exist(shell->env, var))
 		return (update_var(shell->env, var, input_status));
 	else
 		return (add_var(shell->env, var, input_status, shell));

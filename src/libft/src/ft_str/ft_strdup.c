@@ -6,25 +6,25 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/20 17:19:44 by yuewang           #+#    #+#             */
-/*   Updated: 2024/03/16 13:57:06 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 17:03:00 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft.h"
 
 char	*ft_strdup(const char	*s)
-/*returns a pointer to a new string which is a duplicate of the string s.  
-Memory for the new string  is  obtained  with malloc(3), 
-and can be freed with free(3).*/
+	/*returns a pointer to a new string which is a duplicate of the string s.  
+	  Memory for the new string  is  obtained  with malloc(3), 
+	  and can be freed with free(3).*/
 {
 	char	*tab;
 	int		i;
 
 	i = 0;
-    if (!s)
-    {
-        return (0);
-    }
+	if (!s)
+	{
+		return (0);
+	}
 	tab = malloc(sizeof(char) * (ft_strlen(s) + 1));
 	if (!tab)
 		return (0);

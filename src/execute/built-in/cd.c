@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:56:03 by fgranger          #+#    #+#             */
-/*   Updated: 2024/04/21 14:44:19 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 15:30:17 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,11 @@ static	int	ft_change_dir(t_process *process)
 	if (!process->args[1])
 		return (EXIT_FAILURE);
 	if (chdir(process->args[1]))
-    {
-		
-                ft_putstr_fd(" No such file or directory\n", 2);
-
+	{
+		ft_putstr_fd(" No such file or directory\n", 2);
 		return (EXIT_FAILURE);
-    }
-    export_var(process->shell, oldpwd);
+	}
+	export_var(process->shell, oldpwd);
 	pwd = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX + 1));
 	export_var(process->shell, pwd);
 	return (EXIT_SUCCESS);
@@ -78,12 +76,11 @@ int	ft_cd(t_process *process)
 	int	error;
 
 	if (process->argc > 2)
-    {
-                ft_putstr_fd(" too many arguments\n", 2);
-
+	{
+		ft_putstr_fd(" too many arguments\n", 2);
 		return (EXIT_FAILURE);
-    }
-    if (process->args[1])
+	}
+	if (process->args[1])
 	{
 		if (!ft_strcmp(process->args[1], "-"))
 			return (ft_back_to_old(process));

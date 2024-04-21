@@ -6,7 +6,7 @@
 /*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 14:59:43 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 16:52:16 by fgranger         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ char *ft_expand_token(char *token, t_shell *shell);
 t_list *handle_wildcard(char *token_str, t_shell *shell);
 int find_start(char *input, int *index, bool *in_squote, bool *in_dquote);
 int find_end(char *input, int *index, bool *squote, bool *dquote);
-char *trim_quote(char *token);
-char *remove_quotes(char *token, char quote);
+void trim_quote(char **token);
+void remove_quotes(char **token, char quote);
 
 char	*handle_quotes(char *str, const char *token, int *i);
 
@@ -85,7 +85,6 @@ int	ft_execute(t_prompt *prompt);
 bool ft_is_builtin(char *cmd);
 void ft_exec_builtin(t_process *process);
 void ft_exec_process(t_process *process);
-void ft_exec_process2(t_process **process, int index);
 
 //redirection
 void	ft_set_pipes(t_prompt *prompt, int i);
@@ -130,6 +129,7 @@ int exec_error2(t_process *process, char *msg, int error, int ex);
 
 // new
 int	ft_set_files_bt(t_prompt *prompt, int i);
-
+void clear_sub(t_process *process);
+int	handle_here_doc(char *delimiter, int i, t_prompt *prompt);
 
 #endif
