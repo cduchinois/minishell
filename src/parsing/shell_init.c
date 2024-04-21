@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 14:09:45 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/19 21:38:06 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 19:32:17 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,8 @@ t_lst_env	*duplicate_environment(char **envp, t_shell *shell)
 	t_lst_env	*new_node;
 	char		*env_var;
 	char		*separator;
-	int			i;
 
-	i = 0;
+	int (i) = 0;
 	t_lst_env (*env_list) = NULL;
 	while (envp[i])
 	{

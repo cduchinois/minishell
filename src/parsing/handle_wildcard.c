@@ -6,7 +6,7 @@
 /*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 16:42:58 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/01 16:40:26 by yuewang          ###   ########.fr       */
+/*   Updated: 2024/04/21 19:30:49 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,42 @@
 #include <fnmatch.h> // For wildcard pattern matching
 #include <string.h> // For strdup
 
-#include <stdbool.h>
-#include <string.h>
-
-t_list *handle_wildcard(char *token_str, t_shell *shell)
+DIR	*open_directory(char *path)
 {
-    DIR *dir;
-    struct dirent *entry;
-    t_list *head = NULL, *current = head;
+	DIR (*dir) = opendir(path);
+	if (dir == NULL)
+	{
+		perror("opendir");
+		return (NULL);
+	}
+	return (dir);
+}
 
-    dir = opendir(".");
-    if (dir == NULL) {
-        perror("opendir");
-        return NULL;
-    }
+t_list	*handle_wildcard(char *token_str, t_shell *shell)
+{
+	struct dirent	*entry;
+	t_list			*new;
 
-    while ((entry = readdir(dir)) != NULL)
-    {
-        if (fnmatch(token_str, entry->d_name, 0) == 0 && entry->d_name[0] != '.')
-        {
-            t_list *new = safe_malloc(sizeof(t_list), shell);
-            new->content = strdup(entry->d_name);
-            new->next = NULL;
-            if (head == NULL)
-                head = new;
-            else
-                current->next = new;
-            current = new;
-        }
-    }
-    closedir(dir);
-    return head;
+	t_list (*head) = NULL;
+	t_list (*current) = head;
+	DIR (*dir) = open_directory(".");
+	if (!dir)
+		return (NULL);
+	while (entry == readdir(dir) && entry != NULL)
+	{
+		if (fnmatch(token_str, entry->d_name, 0) == 0 && \
+					entry->d_name[0] != '.')
+		{
+			new = safe_malloc(sizeof(t_list), shell);
+			new->content = strdup(entry->d_name);
+			new->next = NULL;
+			if (head == NULL)
+				head = new;
+			else
+				current->next = new;
+			current = new;
+		}
+	}
+	closedir(dir);
+	return (head);
 }

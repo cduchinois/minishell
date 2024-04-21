@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fgranger <fgranger@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yuewang <yuewang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 18:34:10 by yuewang           #+#    #+#             */
-/*   Updated: 2024/04/21 16:52:16 by fgranger         ###   ########.fr       */
+/*   Updated: 2024/04/21 20:10:51 by yuewang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,13 @@ void    parse_line(t_shell *shell, char *line);
 //parsing_________________________________________
 t_list *ft_strtoken(char *input, t_shell *shell);
 t_list *extract_token(char *input, int *index, t_shell *shell);
+int	count_tokens(char *input);
 char *ft_expand_token(char *token, t_shell *shell);
+char	*handle_expansions(char *token_str, t_shell *shell, \
+		bool was_in_single_quote, bool was_in_double_quote);
 t_list *handle_wildcard(char *token_str, t_shell *shell);
 int find_start(char *input, int *index, bool *in_squote, bool *in_dquote);
-int find_end(char *input, int *index, bool *squote, bool *dquote);
+int	find_end(char *input, int *index, bool *squote, bool *dquote);
 void trim_quote(char **token);
 void remove_quotes(char **token, char quote);
 
@@ -65,6 +68,9 @@ char	*handle_quotes(char *str, const char *token, int *i);
 // void append_outfile_node(t_lst_outfile **head, t_lst_outfile *new_node);
 
 t_prompt *prompt_init(t_list *token, t_shell *shell);
+t_process	*process_init(t_list *start, int token_count, \
+						int index, t_prompt *prompt);
+t_lst_file *file_list_init(t_list *start, t_process *process, t_shell *shell);
 
 int ft_isredir(char *s);
 int	ft_isquote(char s);
